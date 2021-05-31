@@ -1,0 +1,8 @@
+{
+  "explanationDimensions": ["URL of your video"],
+  "validRowValues": [],
+  "validColumnValues": [],
+  "validCellValues": [],
+  "showRowHints": true,
+  "showColumnHints": false
+}
