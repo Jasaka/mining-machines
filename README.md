@@ -81,7 +81,7 @@ Fields are connected by **transport technologies**. Each transport technology ca
 # Exercises
 
 Immediate feedback to your solution can be found on your individual test site: 
-[http://git.st.archi-lab.io/groups/students/coco/ss21/ad/tests/application-design_tests_group_f5808f48-78bd-4ff1-b744-ac5e96f6e210](http://git.st.archi-lab.io/groups/students/coco/ss21/ad/tests/application-design_tests_group_f5808f48-78bd-4ff1-b744-ac5e96f6e210)
+[http://students.pages.st.archi-lab.io/coco/ss21/ad/tests/ad_tests_group_f5808f48-78bd-4ff1-b744-ac5e96f6e210/](http://students.pages.st.archi-lab.io/coco/ss21/ad/tests/ad_tests_group_f5808f48-78bd-4ff1-b744-ac5e96f6e210/)
 
 
 ## Exercise 1) Implement the service class for the above Scenario
