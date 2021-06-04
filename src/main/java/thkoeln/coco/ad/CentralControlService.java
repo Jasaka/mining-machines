@@ -57,10 +57,11 @@ public class CentralControlService {
      * @param barrierString the end points of the barrier
      */
     public void addBarrier(UUID fieldId, String barrierString) {
+        InputParser parser = new InputParser();
         if (fieldRepository.findById(fieldId).isPresent()) {
             Field field = fieldRepository.findById(fieldId).get();
             try {
-                field.addBarrier(new Barrier(barrierString));
+                field.addBarrier(Barrier.createBarrier(parser.parseInput(barrierString)));
             } catch (Exception e) {
                 throw new IllegalArgumentException("Invalid Barrier String");
             }

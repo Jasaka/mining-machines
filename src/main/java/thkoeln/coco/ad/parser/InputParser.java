@@ -2,6 +2,7 @@ package thkoeln.coco.ad.parser;
 
 import thkoeln.coco.ad.miningMachine.MiningMachineException;
 import thkoeln.coco.ad.primitives.Command;
+import thkoeln.coco.ad.primitives.Node;
 
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -23,8 +24,10 @@ public class InputParser {
         throw new MiningMachineException("No known command found!");
     }
 
-    private Command parseBarrierCreation(String inputToParse) {
-        return Command.generateEntryCommand(UUID.randomUUID());
+    private boolean isStringMatchingRegEx(String stringToMatch, String regEx) {
+        Pattern regex = Pattern.compile(regEx);
+        Matcher matcher = regex.matcher(stringToMatch);
+        return matcher.matches();
     }
 
     private Command parseValidMachineCommand(String stringToCheck) {
@@ -58,10 +61,20 @@ public class InputParser {
         return restOfCommand.toString();
     }
 
-    private boolean isStringMatchingRegEx(String stringToMatch, String regEx) {
-        Pattern regex = Pattern.compile(regEx);
-        Matcher matcher = regex.matcher(stringToMatch);
-        return matcher.matches();
+    private Command parseBarrierCreation(String inputToParse) {
+        String[] splitNodeString = inputToParse.split("-");
+
+        return Command.generateBarrierCommand(
+                Node.createNodeFromString(splitNodeString[0]),
+                Node.createNodeFromString(splitNodeString[1])
+        );
     }
 
+    public Node parseNodeString(String nodeString) {
+        String nodeRegEx = "^\\({1}[0-9]{1,9},[0-9]{1,9}\\)$";
+        if (isStringMatchingRegEx(nodeString, nodeRegEx)) {
+            return Node.createNodeFromString(nodeString);
+        }
+        throw new MiningMachineException("Invalid Node Syntax");
+    }
 }

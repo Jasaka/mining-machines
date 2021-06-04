@@ -1,6 +1,7 @@
 package thkoeln.coco.ad.field;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import thkoeln.coco.ad.primitives.Barrier;
 
 import javax.persistence.ElementCollection;
@@ -12,28 +13,21 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class Field {
     @Id
-    @Getter
     private final UUID id = UUID.randomUUID();
 
-    @Getter
-    private final Integer height;
-    @Getter
-    private final Integer width;
+    private Integer height = null;
+    private Integer width = null;
 
-    @Getter
     @ElementCollection(targetClass = Barrier.class, fetch = FetchType.EAGER)
     private final List<Barrier> barriers = new ArrayList<>();
 
     private Field(Integer height, Integer width) {
         this.height = height;
         this.width = width;
-    }
-
-    protected Field() {
-        this.height = 5;
-        this.width = 5;
     }
 
 

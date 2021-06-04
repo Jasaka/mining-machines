@@ -1,11 +1,16 @@
 package thkoeln.coco.ad.primitives;
 
+import lombok.Getter;
+
 import java.util.UUID;
 
+@Getter
 public class Command {
-    UUID targetedId = null;
-    String command = null;
-    Integer steps = null;
+    private UUID targetedId = null;
+    private final String command;
+    private Integer steps = null;
+    private Node nodeOne = null;
+    private Node nodeTwo = null;
 
     private Command(String command, Integer steps) {
         this.command = command;
@@ -17,16 +22,25 @@ public class Command {
         this.targetedId = targetedId;
     }
 
-    public static Command generateMoveCommand(String command, Integer steps){
+    public Command(Node nodeOne, Node nodeTwo) {
+        this.command = "br";
+        this.nodeOne = nodeOne;
+        this.nodeTwo = nodeTwo;
+    }
+
+    public static Command generateMoveCommand(String command, Integer steps) {
         return new Command(command, steps);
     }
 
-    public static Command generateTransportCommand(UUID targetedId){
+    public static Command generateTransportCommand(UUID targetedId) {
         return new Command("tr", targetedId);
     }
 
-    public static Command generateEntryCommand(UUID targetedId){
+    public static Command generateEntryCommand(UUID targetedId) {
         return new Command("en", targetedId);
     }
 
+    public static Command generateBarrierCommand(Node nodeOne, Node nodeTwo) {
+        return new Command(nodeOne, nodeTwo);
+    }
 }
