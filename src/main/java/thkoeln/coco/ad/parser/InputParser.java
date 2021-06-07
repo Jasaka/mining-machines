@@ -1,8 +1,8 @@
 package thkoeln.coco.ad.parser;
 
+import thkoeln.coco.ad.instruction.*;
 import thkoeln.coco.ad.miningMachine.MiningMachineException;
-import thkoeln.coco.ad.primitives.Command;
-import thkoeln.coco.ad.primitives.Node;
+import thkoeln.coco.ad.primitives.Square;
 
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 public class InputParser {
 
-    public Command parseInput(String inputToParse) {
+    public Instruction parseInput(String inputToParse) {
         String badCharacterRegEx = "[^a-z0-9-,\\[\\]()]";
         String machineCommandRegEx = "^\\[.*\\]$";
         String barrierCommandRegEx = "^\\({1}[0-9]{1,9},[0-9]{1,9}\\)-\\([0-9]{1,9},[0-9]{1,9}\\){1}$";
@@ -20,17 +20,17 @@ public class InputParser {
             } else if (isStringMatchingRegEx(inputToParse, barrierCommandRegEx)) {
                 return parseBarrierCreation(inputToParse);
             }
-        } else throw new MiningMachineException("Found Illegal Characters In Command!");
+        } else throw new MiningMachineException("Found Illegal Characters In Instruction!");
         throw new MiningMachineException("No known command found!");
     }
 
-    private boolean isStringMatchingRegEx(String stringToMatch, String regEx) {
+    private static boolean isStringMatchingRegEx(String stringToMatch, String regEx) {
         Pattern regex = Pattern.compile(regEx);
         Matcher matcher = regex.matcher(stringToMatch);
         return matcher.matches();
     }
 
-    private Command parseValidMachineCommand(String stringToCheck) {
+    private Instruction parseValidMachineCommand(String stringToCheck) {
         String[] tokens = stringToCheck.split("");
         String command = tokens[1] + tokens[2];
 
@@ -41,16 +41,16 @@ public class InputParser {
 
         if (isStringMatchingRegEx(stringToCheck, movementRegEx)) {
             Integer steps = Integer.parseInt(parseRestOfMachineCommand(tokens));
-            return Command.generateMoveCommand(command, steps);
+            return new MoveInstruction(command, steps);
         } else if (isStringMatchingRegEx(stringToCheck, uuidRegEx)) {
             UUID targetedId = UUID.fromString(parseRestOfMachineCommand(tokens));
             if (isStringMatchingRegEx(stringToCheck, transportRegEx)) {
-                return Command.generateTransportCommand(targetedId);
+                return new TransportInstruction(command, targetedId);
             } else if (isStringMatchingRegEx(stringToCheck, entryRegEx)) {
-                return Command.generateEntryCommand(targetedId);
+                return new EntryInstruction(command, targetedId);
             }
         }
-        throw new MiningMachineException("Command does not match syntax");
+        throw new MiningMachineException("Instruction does not match syntax");
     }
 
     private String parseRestOfMachineCommand(String[] tokens) {
@@ -61,20 +61,21 @@ public class InputParser {
         return restOfCommand.toString();
     }
 
-    private Command parseBarrierCreation(String inputToParse) {
-        String[] splitNodeString = inputToParse.split("-");
+    private Instruction parseBarrierCreation(String inputToParse) {
+        String[] splitBarrierString = inputToParse.split("-");
 
-        return Command.generateBarrierCommand(
-                Node.createNodeFromString(splitNodeString[0]),
-                Node.createNodeFromString(splitNodeString[1])
+        return new BarrierInstruction(
+                "br",
+                splitBarrierString[0],
+                splitBarrierString[1]
         );
     }
 
-    public Node parseNodeString(String nodeString) {
-        String nodeRegEx = "^\\({1}[0-9]{1,9},[0-9]{1,9}\\)$";
-        if (isStringMatchingRegEx(nodeString, nodeRegEx)) {
-            return Node.createNodeFromString(nodeString);
+    public static Square parseSquareString(String squareString) {
+        String squareRegEx = "^\\({1}[0-9]{1,9},[0-9]{1,9}\\)$";
+        if (isStringMatchingRegEx(squareString, squareRegEx)) {
+            return Square.createSquareFromString(squareString);
         }
-        throw new MiningMachineException("Invalid Node Syntax");
+        throw new MiningMachineException("Invalid Square Syntax");
     }
 }

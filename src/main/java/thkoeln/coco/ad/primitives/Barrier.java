@@ -2,36 +2,35 @@ package thkoeln.coco.ad.primitives;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import thkoeln.coco.ad.instruction.BarrierInstruction;
 import thkoeln.coco.ad.miningMachine.MiningMachineException;
+import thkoeln.coco.ad.parser.InputParser;
 
-import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
-import javax.persistence.FetchType;
-import java.util.ArrayList;
-import java.util.List;
 
 @Embeddable
-@NoArgsConstructor
 @Getter
+@NoArgsConstructor
 public class Barrier {
+    private String startSquareString;
+    private String endSquareString;
 
-    @ElementCollection(targetClass = Node.class, fetch = FetchType.EAGER)
-    private final List<Node> nodes = new ArrayList<>();
-
-    public Barrier(Node nodeOne, Node nodeTwo) {
-        this.nodes.add(nodeOne);
-        this.nodes.add(nodeTwo);
+    public Barrier(String startSquareString, String endSquareString) {
+        this.startSquareString = startSquareString;
+        this.endSquareString = endSquareString;
     }
 
-    public static Barrier createBarrier(Command barrierCommand){
-        if (barrierCommand.getCommand().equals("br") && isBarrierValid(barrierCommand.getNodeOne(), barrierCommand.getNodeTwo())){
-            return new Barrier(barrierCommand.getNodeOne(), barrierCommand.getNodeTwo());
+    public static Barrier createBarrier(BarrierInstruction barrierInstruction){
+        Square startSquare = InputParser.parseSquareString(barrierInstruction.getStartSquare());
+        Square endSquare = InputParser.parseSquareString(barrierInstruction.getEndSquare());
+        if (barrierInstruction.getInstruction().equals("br") && isBarrierValid(startSquare, endSquare)){
+            return new Barrier(barrierInstruction.getStartSquare(), barrierInstruction.getEndSquare());
         }
         throw new MiningMachineException("Tried barrier creation with wrong command");
     }
 
-    private static boolean isBarrierValid(Node nodeOne, Node nodeTwo){
-        if (nodeOne.getNodeX().equals(nodeTwo.getNodeX()) || nodeOne.getNodeY().equals(nodeTwo.getNodeY()) ){
+    private static boolean isBarrierValid(Square squareOne, Square squareTwo){
+        if (squareOne.getCoordinateX().equals(squareTwo.getCoordinateX()) || squareOne.getCoordinateY().equals(squareTwo.getCoordinateY()) ){
             return true;
         }
         throw new MiningMachineException("Diagonal barrier attempt");

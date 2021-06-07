@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import thkoeln.coco.ad.CentralControlService;
-import thkoeln.coco.ad.primitives.Command;
+import thkoeln.coco.ad.instruction.Instruction;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -26,6 +26,6 @@ public class MiningMachine {
         this.name = name;
     }
 
-    public void executeCommand(CentralControlService centralControlService, Command command) {
+    public void executeCommand(CentralControlService centralControlService, Instruction instruction) {
     }
 }

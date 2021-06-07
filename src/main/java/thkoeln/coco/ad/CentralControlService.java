@@ -5,11 +5,12 @@ import org.springframework.stereotype.Service;
 import thkoeln.coco.ad.field.Connection;
 import thkoeln.coco.ad.field.Field;
 import thkoeln.coco.ad.field.TransportTechnology;
+import thkoeln.coco.ad.instruction.BarrierInstruction;
 import thkoeln.coco.ad.miningMachine.MiningMachine;
 import thkoeln.coco.ad.miningMachine.MiningMachineException;
 import thkoeln.coco.ad.parser.InputParser;
 import thkoeln.coco.ad.primitives.Barrier;
-import thkoeln.coco.ad.primitives.Command;
+import thkoeln.coco.ad.instruction.Instruction;
 import thkoeln.coco.ad.repository.ConnectionRepository;
 import thkoeln.coco.ad.repository.FieldRepository;
 import thkoeln.coco.ad.repository.MiningMachineRepository;
@@ -46,7 +47,7 @@ public class CentralControlService {
             fieldRepository.save(field);
             return field.getId();
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid Field Dimensions");
+            throw new MiningMachineException(e.getMessage());
         }
     }
 
@@ -61,9 +62,9 @@ public class CentralControlService {
         if (fieldRepository.findById(fieldId).isPresent()) {
             Field field = fieldRepository.findById(fieldId).get();
             try {
-                field.addBarrier(Barrier.createBarrier(parser.parseInput(barrierString)));
+                field.addBarrier(Barrier.createBarrier((BarrierInstruction) parser.parseInput(barrierString)));
             } catch (Exception e) {
-                throw new IllegalArgumentException("Invalid Barrier String");
+                throw new MiningMachineException(e.getMessage());
             }
         }
     }
@@ -95,7 +96,7 @@ public class CentralControlService {
             Connection connection = Connection.createConnection(transportTechnologyId, sourceFieldId, sourcePointString, destinationFieldId, destinationPointString);
             connectionRepository.save(connection);
             return connection.getId();
-        } else throw new IllegalArgumentException("Tried connecting non-existent Fields or technologies");
+        } else throw new MiningMachineException("Tried connecting non-existent Fields or technologies");
     }
 
     /**
@@ -125,9 +126,9 @@ public class CentralControlService {
      */
     public Boolean executeCommand(UUID miningMachineId, String taskString) {
         InputParser parser = new InputParser();
-        Command command = parser.parseInput(taskString);
+        Instruction instruction = parser.parseInput(taskString);
         if (miningMachineRepository.findById(miningMachineId).isPresent()) {
-            miningMachineRepository.findById(miningMachineId).get().executeCommand(this, command);
+            miningMachineRepository.findById(miningMachineId).get().executeCommand(this, instruction);
         } else throw new MiningMachineException("Targeted Mining machine doesn't exist");
         return true;
     }

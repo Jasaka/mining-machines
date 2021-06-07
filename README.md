@@ -206,7 +206,7 @@ run simple commands).
     * The request body for the new mining machine doesn't need a reference to a field.
     * However, there must only be **one** field where all the new mining machines are placed. So, if you create
         a second mining machine, it has to be placed on the same field.
-    * If (0,0) is blocked, the "create new mining machine" command must fail; in that case you need to return
+    * If (0,0) is blocked, the "create new mining machine" instruction must fail; in that case you need to return
         an HTTP return code 409 (conflict).      
 * (2b.3) Get a specific mining machine by ID
 * (2c.1) Give a specific mining machine a task

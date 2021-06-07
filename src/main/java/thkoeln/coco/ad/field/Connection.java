@@ -3,7 +3,7 @@ package thkoeln.coco.ad.field;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import thkoeln.coco.ad.parser.InputParser;
-import thkoeln.coco.ad.primitives.Node;
+import thkoeln.coco.ad.primitives.Square;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -23,21 +23,21 @@ public class Connection {
     private UUID sourceFieldId = null;
     private UUID destinationFieldId = null;
 
-    @ElementCollection(targetClass = Node.class, fetch = FetchType.EAGER)
-    private final List<Node> connectedNodes = new ArrayList<>();
+    @ElementCollection(targetClass = Square.class, fetch = FetchType.EAGER)
+    private final List<Square> connectedSquares = new ArrayList<>();
 
-    public Connection(UUID transportTechnologyId, UUID sourceFieldId, Node sourceNode, UUID destinationFieldId, Node destinationNode) {
+    public Connection(UUID transportTechnologyId, UUID sourceFieldId, Square sourceSquare, UUID destinationFieldId, Square destinationSquare) {
         this.transportTechnologyId = transportTechnologyId;
         this.sourceFieldId = sourceFieldId;
-        this.connectedNodes.add(sourceNode);
+        this.connectedSquares.add(sourceSquare);
         this.destinationFieldId = destinationFieldId;
-        this.connectedNodes.add(destinationNode);
+        this.connectedSquares.add(destinationSquare);
     }
 
     public static Connection createConnection(UUID transportTechnologyId, UUID sourceFieldId, String sourcePointString, UUID destinationFieldId, String destinationPointString) {
         InputParser parser = new InputParser();
-        Node sourceNode= parser.parseNodeString(sourcePointString);
-        Node destinationNode= parser.parseNodeString(destinationPointString);
-        return new Connection(transportTechnologyId, sourceFieldId, sourceNode, destinationFieldId, destinationNode);
+        Square sourceSquare = parser.parseSquareString(sourcePointString);
+        Square destinationSquare = parser.parseSquareString(destinationPointString);
+        return new Connection(transportTechnologyId, sourceFieldId, sourceSquare, destinationFieldId, destinationSquare);
     }
 }

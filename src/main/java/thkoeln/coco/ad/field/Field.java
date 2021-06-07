@@ -3,31 +3,38 @@ package thkoeln.coco.ad.field;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import thkoeln.coco.ad.primitives.Barrier;
+import thkoeln.coco.ad.primitives.Square;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Getter
+@Transactional
 @NoArgsConstructor
 public class Field {
     @Id
     private final UUID id = UUID.randomUUID();
 
-    private Integer height = null;
-    private Integer width = null;
+    @ElementCollection(targetClass = Square.class, fetch = FetchType.LAZY)
+    private final List<Square> squares = new ArrayList<>();
 
-    @ElementCollection(targetClass = Barrier.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = Barrier.class, fetch = FetchType.LAZY)
     private final List<Barrier> barriers = new ArrayList<>();
 
     private Field(Integer height, Integer width) {
-        this.height = height;
-        this.width = width;
+        generateSquares(height, width);
+    }
+
+    private void generateSquares(Integer height, Integer width) {
+        for (int y = 0; y < height; y++){
+            for (int x = 0; x < width; x++){
+                squares.add(Square.createSquare(x,y));
+            }
+        }
     }
 
 
