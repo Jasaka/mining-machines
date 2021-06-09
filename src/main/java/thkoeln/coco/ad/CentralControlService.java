@@ -1,17 +1,32 @@
 package thkoeln.coco.ad;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import thkoeln.coco.ad.field.Barrier;
-import thkoeln.coco.ad.field.Connection;
+import thkoeln.coco.ad.field.FieldRepository;
+import thkoeln.coco.ad.miningMachine.MiningMachineRepository;
+import thkoeln.coco.ad.transport.Connection;
 import thkoeln.coco.ad.field.Field;
-import thkoeln.coco.ad.field.TransportTechnology;
+import thkoeln.coco.ad.transport.TransportTechnology;
 import thkoeln.coco.ad.instruction.InstructionFactory;
 import thkoeln.coco.ad.miningMachine.MiningMachine;
+import thkoeln.coco.ad.transport.TransportTechnologyRepository;
 
 import java.util.UUID;
 
 @Service
 public class CentralControlService {
+
+    private final FieldRepository fieldRepository;
+    private final MiningMachineRepository machineRepository;
+    private final TransportTechnologyRepository transportRepository;
+
+    @Autowired
+    public CentralControlService(FieldRepository fieldRepository, MiningMachineRepository machineRepository, TransportTechnologyRepository transportRepository) {
+        this.fieldRepository = fieldRepository;
+        this.machineRepository = machineRepository;
+        this.transportRepository = transportRepository;
+    }
 
     /**
      * This method creates a new field.

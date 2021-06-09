@@ -1,6 +1,7 @@
-package thkoeln.coco.ad.field;
+package thkoeln.coco.ad.transport;
 
 import lombok.Getter;
+import thkoeln.coco.ad.field.Field;
 import thkoeln.coco.ad.instruction.CoordinateInstruction;
 import thkoeln.coco.ad.instruction.InstructionFactory;
 import thkoeln.coco.ad.miningMachine.MiningMachineException;
@@ -24,7 +25,6 @@ public class Connection {
     @Getter
     @OneToOne
     private Field sourceField;
-
 
     @Getter
     @OneToOne
