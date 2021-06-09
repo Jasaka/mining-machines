@@ -6,11 +6,10 @@ import java.util.UUID;
 
 @Getter
 public class EntryInstruction extends Instruction{
-    private final UUID targetedId;
 
-    public EntryInstruction(String instruction, UUID targetedId) {
-        this.instruction = instruction;
-        this.targetedId = targetedId;
+    private final UUID targetedFieldId;
+
+    public EntryInstruction(String inputString) {
+        this.targetedFieldId = UUID.fromString(inputString.replaceAll("\\[en,", "").replaceAll("\\]", ""));
     }
-
 }

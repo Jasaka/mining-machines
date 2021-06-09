@@ -1,43 +1,30 @@
 package thkoeln.coco.ad.field;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import thkoeln.coco.ad.parser.InputParser;
-import thkoeln.coco.ad.primitives.Square;
+import thkoeln.coco.ad.instruction.CoordinateInstruction;
+import thkoeln.coco.ad.instruction.InstructionFactory;
+import thkoeln.coco.ad.miningMachine.MiningMachineException;
+import thkoeln.coco.ad.primitive.Coordinate;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-@Entity
-@NoArgsConstructor
 @Getter
 public class Connection {
-    @Id
+
     private final UUID id = UUID.randomUUID();
-    private UUID transportTechnologyId = null;
-    private UUID sourceFieldId = null;
-    private UUID destinationFieldId = null;
+    Coordinate sourcePoint;
+    Coordinate destinationPoint;
 
-    @ElementCollection(targetClass = Square.class, fetch = FetchType.EAGER)
-    private final List<Square> connectedSquares = new ArrayList<>();
+    public Connection(String sourcePointString, String destinationPointString) {
+        try {
+            CoordinateInstruction sourcePointInstruction = InstructionFactory.getInstruction(sourcePointString);
+            CoordinateInstruction destinationPointInstruction = InstructionFactory.getInstruction(destinationPointString);
 
-    public Connection(UUID transportTechnologyId, UUID sourceFieldId, Square sourceSquare, UUID destinationFieldId, Square destinationSquare) {
-        this.transportTechnologyId = transportTechnologyId;
-        this.sourceFieldId = sourceFieldId;
-        this.connectedSquares.add(sourceSquare);
-        this.destinationFieldId = destinationFieldId;
-        this.connectedSquares.add(destinationSquare);
-    }
+            this.sourcePoint = sourcePointInstruction.getCoordinate();
+            this.destinationPoint = destinationPointInstruction.getCoordinate();
+        } catch (ClassCastException e) {
+            throw new MiningMachineException("Tried to apply wrong command type");
+        }
 
-    public static Connection createConnection(UUID transportTechnologyId, UUID sourceFieldId, String sourcePointString, UUID destinationFieldId, String destinationPointString) {
-        InputParser parser = new InputParser();
-        Square sourceSquare = parser.parseSquareString(sourcePointString);
-        Square destinationSquare = parser.parseSquareString(destinationPointString);
-        return new Connection(transportTechnologyId, sourceFieldId, sourceSquare, destinationFieldId, destinationSquare);
     }
 }
