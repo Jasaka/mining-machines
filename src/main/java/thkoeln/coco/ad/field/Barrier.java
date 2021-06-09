@@ -37,7 +37,10 @@ public class Barrier {
         Integer x2 = instruction.getEndCoordinate().getX();
         Integer y2 = instruction.getEndCoordinate().getY();
         if (!(x1.equals(x2) || y1.equals(y2))) {
-            throw new MiningMachineException("Invalid Barrier String");
+            throw new MiningMachineException("Invalid Barrier String - Tried creating diagonal barrier");
+        }
+        if ((x1.equals(x2) && y1.equals(y2))) {
+            throw new MiningMachineException("Invalid Barrier String - Tried creating dot barrier");
         }
     }
 }
