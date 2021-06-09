@@ -9,6 +9,7 @@ import org.springframework.web.context.WebApplicationContext;
 import thkoeln.coco.ad.miningMachine.MiningMachineException;
 import thkoeln.coco.ad.core.MovementTests;
 
+import javax.transaction.Transactional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;

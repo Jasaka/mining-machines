@@ -1,7 +1,9 @@
 package thkoeln.coco.ad.primitive;
 
 import lombok.Getter;
+import lombok.Setter;
 
+import javax.persistence.Basic;
 import javax.persistence.Embeddable;
 
 @Embeddable

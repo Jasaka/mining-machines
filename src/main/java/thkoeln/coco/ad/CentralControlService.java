@@ -8,24 +8,26 @@ import thkoeln.coco.ad.miningMachine.MiningMachineException;
 import thkoeln.coco.ad.miningMachine.MiningMachineRepository;
 import thkoeln.coco.ad.transport.Connection;
 import thkoeln.coco.ad.field.Field;
+import thkoeln.coco.ad.transport.ConnectionRepository;
 import thkoeln.coco.ad.transport.TransportTechnology;
 import thkoeln.coco.ad.instruction.InstructionFactory;
 import thkoeln.coco.ad.miningMachine.MiningMachine;
 import thkoeln.coco.ad.transport.TransportTechnologyRepository;
 
-import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @Service
 public class CentralControlService {
 
     private final FieldRepository fieldRepository;
+    private final ConnectionRepository connectionRepository;
     private final MiningMachineRepository machineRepository;
     private final TransportTechnologyRepository transportRepository;
 
     @Autowired
-    public CentralControlService(FieldRepository fieldRepository, MiningMachineRepository machineRepository, TransportTechnologyRepository transportRepository) {
+    public CentralControlService(FieldRepository fieldRepository, ConnectionRepository connectionRepository, MiningMachineRepository machineRepository, TransportTechnologyRepository transportRepository) {
         this.fieldRepository = fieldRepository;
+        this.connectionRepository = connectionRepository;
         this.machineRepository = machineRepository;
         this.transportRepository = transportRepository;
     }
@@ -53,6 +55,9 @@ public class CentralControlService {
         Field field = fieldRepository.findById(fieldId).orElseThrow(() -> new MiningMachineException("Nonexisting FieldID provided: " + fieldId));
 
         Barrier barrier = Barrier.fromString(barrierString);
+
+        field.addBarrier(barrier);
+        fieldRepository.save(field);
     }
 
     /**
@@ -82,7 +87,11 @@ public class CentralControlService {
         Field sourceField = fieldRepository.findById(sourceFieldId).orElseThrow(() -> new MiningMachineException("Nonexisting FieldID provided: " + sourceFieldId));
         Field destinationField = fieldRepository.findById(destinationFieldId).orElseThrow(() -> new MiningMachineException("Nonexisting FieldID provided: " + destinationFieldId));
 
-        Connection connection = new Connection(sourcePointString, destinationPointString);
+        Connection connection = new Connection(sourceField, sourcePointString, destinationField, destinationPointString);
+        connectionRepository.save(connection);
+
+        technology.addConnection(connection);
+        transportRepository.save(technology);
         return connection.getId();
     }
 

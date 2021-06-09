@@ -34,13 +34,20 @@ public class Connection {
     private final List<Coordinate> coordinates = new ArrayList<>();
 
     protected Connection(){}
-    public Connection(String sourcePointString, String destinationPointString) {
+
+    public Connection(Field sourceField, String sourcePointString, Field destinationField, String destinationPointString) {
         try {
             CoordinateInstruction sourcePointInstruction = InstructionFactory.getInstruction(sourcePointString);
             CoordinateInstruction destinationPointInstruction = InstructionFactory.getInstruction(destinationPointString);
 
+            //TODO: Check connection validity
+            
+            this.sourceField = sourceField;
+            this.destinationField = destinationField;
+
             this.coordinates.add(sourcePointInstruction.getCoordinate());
             this.coordinates.add(destinationPointInstruction.getCoordinate());
+
         } catch (ClassCastException e) {
             throw new MiningMachineException("Tried to apply wrong command type");
         }
