@@ -36,6 +36,7 @@ public class CentralControlService {
      */
     public UUID addField(Integer height, Integer width) {
         Field field = new Field(height, width);
+        fieldRepository.save(field);
         return field.getId();
     }
 
@@ -55,6 +56,7 @@ public class CentralControlService {
      */
     public UUID addTransportTechnology(String technology) {
         TransportTechnology transportTechnology = new TransportTechnology(technology);
+        transportRepository.save(transportTechnology);
         return transportTechnology.getId();
     }
 
@@ -79,6 +81,7 @@ public class CentralControlService {
      */
     public UUID addMiningMachine(String name) {
         MiningMachine miningMachine = new MiningMachine(name);
+        machineRepository.save(miningMachine);
         return miningMachine.getId();
     }
 
