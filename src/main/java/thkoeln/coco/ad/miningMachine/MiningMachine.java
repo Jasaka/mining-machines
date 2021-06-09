@@ -1,7 +1,6 @@
 package thkoeln.coco.ad.miningMachine;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
@@ -9,7 +8,6 @@ import javax.persistence.Id;
 import java.util.UUID;
 
 @Entity
-@NoArgsConstructor
 public class MiningMachine {
 
     @Id
@@ -19,6 +17,8 @@ public class MiningMachine {
     @Getter
     @Setter
     private String name;
+
+    protected MiningMachine(){}
 
     public MiningMachine( String name ) {
         this.name = name;

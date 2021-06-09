@@ -6,11 +6,15 @@ import thkoeln.coco.ad.instruction.InstructionFactory;
 import thkoeln.coco.ad.miningMachine.MiningMachineException;
 import thkoeln.coco.ad.primitive.Coordinate;
 
+import javax.persistence.Embeddable;
+
+@Embeddable
 @Getter
 public class Barrier {
-    private final Coordinate startCoordinate;
-    private final Coordinate endCoordinate;
+    private Coordinate startCoordinate;
+    private Coordinate endCoordinate;
 
+    protected Barrier(){}
     public Barrier(Coordinate startCoordinate, Coordinate endCoordinate) {
         this.startCoordinate = startCoordinate;
         this.endCoordinate = endCoordinate;
