@@ -3,9 +3,7 @@ package thkoeln.coco.ad.field;
 import lombok.Getter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Getter
@@ -16,7 +14,7 @@ public class Field {
     private Integer height, width;
 
     //TODO: Manage Cartesian product/EAGER-LAZY Problems
-    @OneToMany(targetEntity = Square.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(targetEntity = Square.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private final List<Square> squares = new ArrayList<>();
 
     @Transient
@@ -24,7 +22,7 @@ public class Field {
 
     //TODO: Manage Cartesian product/EAGER-LAZY Problems
     @ElementCollection(targetClass = Barrier.class, fetch = FetchType.EAGER)
-    private final List<Barrier> barriers = new ArrayList<>();
+    private final Set<Barrier> barriers = new HashSet<>();
 
     protected Field(){}
 

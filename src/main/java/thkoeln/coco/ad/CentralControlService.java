@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import thkoeln.coco.ad.field.Barrier;
 import thkoeln.coco.ad.field.FieldRepository;
+import thkoeln.coco.ad.field.SquareRepository;
 import thkoeln.coco.ad.miningMachine.MiningMachineException;
 import thkoeln.coco.ad.miningMachine.MiningMachineRepository;
 import thkoeln.coco.ad.transport.Connection;
@@ -20,13 +21,15 @@ import java.util.UUID;
 public class CentralControlService {
 
     private final FieldRepository fieldRepository;
+    private final SquareRepository squareRepository;
     private final ConnectionRepository connectionRepository;
     private final MiningMachineRepository machineRepository;
     private final TransportTechnologyRepository transportRepository;
 
     @Autowired
-    public CentralControlService(FieldRepository fieldRepository, ConnectionRepository connectionRepository, MiningMachineRepository machineRepository, TransportTechnologyRepository transportRepository) {
+    public CentralControlService(FieldRepository fieldRepository, SquareRepository squareRepository, ConnectionRepository connectionRepository, MiningMachineRepository machineRepository, TransportTechnologyRepository transportRepository) {
         this.fieldRepository = fieldRepository;
+        this.squareRepository = squareRepository;
         this.connectionRepository = connectionRepository;
         this.machineRepository = machineRepository;
         this.transportRepository = transportRepository;
@@ -41,6 +44,7 @@ public class CentralControlService {
      */
     public UUID addField(Integer height, Integer width) {
         Field field = new Field(height, width);
+        squareRepository.saveAll(field.getSquares());
         fieldRepository.save(field);
         return field.getId();
     }
@@ -57,6 +61,7 @@ public class CentralControlService {
         Barrier barrier = Barrier.fromString(barrierString);
 
         field.addBarrier(barrier);
+        squareRepository.saveAll(field.getSquares());
         fieldRepository.save(field);
     }
 
@@ -122,8 +127,7 @@ public class CentralControlService {
      */
     public Boolean executeCommand(UUID miningMachineId, String taskString) {
         MiningMachine machine = machineRepository.findById(miningMachineId).orElseThrow(() -> new MiningMachineException("Nonexisting MiningMachineID provided: " + miningMachineId));
-        InstructionFactory.getInstruction(taskString);
-        return true;
+        return machine.executeInstruction(InstructionFactory.getInstruction(taskString));
     }
 
     /**
