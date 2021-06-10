@@ -12,6 +12,7 @@ import java.util.UUID;
 public class TransportTechnology {
 
     @Id
+    @Column(name = "technology_id")
     private final UUID id = UUID.randomUUID();
     private String technologyName;
 

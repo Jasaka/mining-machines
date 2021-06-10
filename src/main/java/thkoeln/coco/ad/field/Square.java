@@ -26,6 +26,10 @@ public class Square {
         this.coordinate = coordinate;
     }
 
+    public static Square fromInt(int x, int y){
+        return new Square(new Coordinate(x, y));
+    }
+
     public void setBlocked(){
         this.blocked = true;
     }

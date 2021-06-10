@@ -2,6 +2,7 @@ package thkoeln.coco.ad.miningMachine;
 
 import lombok.Getter;
 import lombok.Setter;
+import thkoeln.coco.ad.field.Field;
 import thkoeln.coco.ad.field.Square;
 import thkoeln.coco.ad.instruction.EntryInstruction;
 import thkoeln.coco.ad.instruction.Instruction;
@@ -10,6 +11,7 @@ import thkoeln.coco.ad.instruction.TransportInstruction;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import java.util.UUID;
 
@@ -27,6 +29,10 @@ public class MiningMachine {
     @Getter
     @OneToOne
     private Square currentSquare = null;
+
+    @Getter
+    @ManyToOne
+    private Field currentField = null;
 
     protected MiningMachine() {
     }

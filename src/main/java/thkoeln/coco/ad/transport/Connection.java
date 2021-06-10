@@ -7,10 +7,8 @@ import thkoeln.coco.ad.instruction.InstructionFactory;
 import thkoeln.coco.ad.miningMachine.MiningMachineException;
 import thkoeln.coco.ad.primitive.Coordinate;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -21,6 +19,10 @@ public class Connection {
     @Id
     @Getter
     private final UUID id = UUID.randomUUID();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "transport_technology_id")
+    private TransportTechnology transportTechnology;
 
     @Getter
     @OneToOne
