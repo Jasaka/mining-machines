@@ -171,7 +171,6 @@ public class CentralControlService {
      */
     public String getMiningMachinePoint(UUID miningMachineId) {
         MiningMachine machine = machineRepository.findById(miningMachineId).orElseThrow(() -> new MiningMachineException("Nonexisting MiningMachineID provided: " + miningMachineId));
-        //TODO
-        throw new UnsupportedOperationException();
+        return machine.getCurrentPosition().toString();
     }
 }
