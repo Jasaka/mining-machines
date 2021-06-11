@@ -12,23 +12,24 @@ import java.util.UUID;
 public class TransportTechnology {
 
     @Id
-    @Column(name = "technology_id")
     private final UUID id = UUID.randomUUID();
     private String technologyName;
 
-    // TODO: fix german primary key violation exception
-     @OneToMany(fetch = FetchType.EAGER)
-     private final List<Connection> connections = new ArrayList<>();
-    //@ElementCollection(fetch = FetchType.EAGER)
-    //private final List<UUID> connectionIds = new ArrayList<>();
+    //  TODO: fix german primary key violation exception
+    /*@OneToMany
+    private final List<Connection> connections = new ArrayList<>();*/
+    @ElementCollection(fetch = FetchType.EAGER)
+    private final List<UUID> connectionIds = new ArrayList<>();
 
-    protected TransportTechnology(){}
+    protected TransportTechnology() {
+    }
+
     public TransportTechnology(String technology) {
         this.technologyName = technology;
     }
 
-    public void addConnection(Connection connection){
-        connections.add(connection);
-        //connectionIds.add(connection.getId());
+    public void addConnection(Connection connection) {
+//        connections.add(connection);
+        connectionIds.add(connection.getId());
     }
 }

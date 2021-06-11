@@ -1,24 +1,28 @@
 package thkoeln.coco.ad.field;
 
 import lombok.Getter;
+import thkoeln.coco.ad.miningMachine.MiningMachineException;
 
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
-@Getter
 public class Field {
+    @Getter
     @Id
     private final UUID id = UUID.randomUUID();
 
+    @Getter
     private Integer height, width;
 
+    @Getter
     @OneToMany(targetEntity = Square.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private final List<Square> squares = new ArrayList<>();
 
     @Transient
     private Square[][] field;
 
+    @Getter
     @ElementCollection(targetClass = Barrier.class, fetch = FetchType.EAGER)
     private final Set<Barrier> barriers = new HashSet<>();
 
@@ -55,5 +59,19 @@ public class Field {
 
     public void removeBarrier(Barrier barrier) {
         barriers.remove(barrier);
+    }
+
+    public Square getEntrySquare(){
+        ensureFieldIsInitialized();
+        return field[0][0];
+    }
+
+    public Square getSquare(int x, int y){
+        ensureFieldIsInitialized();
+        try {
+            return field[x][y];
+        } catch (NullPointerException e){
+            throw new MiningMachineException("Tried Accessing nonexistent square.");
+        }
     }
 }

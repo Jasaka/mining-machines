@@ -92,11 +92,19 @@ public class CentralControlService {
         Field sourceField = fieldRepository.findById(sourceFieldId).orElseThrow(() -> new MiningMachineException("Nonexisting FieldID provided: " + sourceFieldId));
         Field destinationField = fieldRepository.findById(destinationFieldId).orElseThrow(() -> new MiningMachineException("Nonexisting FieldID provided: " + destinationFieldId));
 
+        System.out.println("   Initializing new Connection...");
         Connection connection = new Connection(sourceField, sourcePointString, destinationField, destinationPointString);
+        System.out.println("   - Done");
+        System.out.println("   Saving Connection...");
         connectionRepository.save(connection);
+        System.out.println("   - Done");
 
+        System.out.println("   Adding connection to technology...");
         technology.addConnection(connection);
+        System.out.println("   - Done");
+        System.out.println("   Saving technology...");
         transportRepository.save(technology);
+        System.out.println("   - Done");
         return connection.getId();
     }
 
@@ -126,16 +134,18 @@ public class CentralControlService {
      * tr and en commands are only successful if the action can be performed.)
      */
     public Boolean executeCommand(UUID miningMachineId, String taskString) {
-        MiningMachine machine = machineRepository.findById(miningMachineId).orElseThrow(() -> new MiningMachineException("Nonexisting MiningMachineID provided: " + miningMachineId));
-        if(InstructionFactory.getInstruction(taskString) instanceof MoveInstruction){
+        MiningMachine machine = machineRepository.findById(miningMachineId).orElseThrow(() -> new MiningMachineException("Nonexistent MiningMachineID provided: " + miningMachineId));
+        if (InstructionFactory.getInstruction(taskString) instanceof MoveInstruction) {
             MoveInstruction instruction = InstructionFactory.getInstruction(taskString);
             return machine.executeMoveInstruction(instruction);
         }
-        if(InstructionFactory.getInstruction(taskString) instanceof TransportInstruction){
-
+        if (InstructionFactory.getInstruction(taskString) instanceof TransportInstruction) {
+            TransportInstruction instruction = InstructionFactory.getInstruction(taskString);
         }
-        if(InstructionFactory.getInstruction(taskString) instanceof EntryInstruction){
-
+        if (InstructionFactory.getInstruction(taskString) instanceof EntryInstruction) {
+            EntryInstruction instruction = InstructionFactory.getInstruction(taskString);
+            Field entryField = fieldRepository.findById(instruction.getTargetedFieldId()).orElseThrow(() -> new MiningMachineException("Nonexistent FieldID provided: " + instruction.getTargetedFieldId()));
+            return machine.executeEntryInstruction(entryField);
         }
         throw new MiningMachineException("No executable command provided");
     }

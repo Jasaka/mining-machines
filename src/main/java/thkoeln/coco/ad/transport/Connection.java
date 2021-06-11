@@ -20,10 +20,6 @@ public class Connection {
     @Getter
     private final UUID id = UUID.randomUUID();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "transport_technology_id")
-    private TransportTechnology transportTechnology;
-
     @Getter
     @OneToOne
     private Field sourceField;

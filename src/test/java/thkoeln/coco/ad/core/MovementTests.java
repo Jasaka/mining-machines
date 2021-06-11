@@ -35,23 +35,40 @@ public abstract class MovementTests {
 
 
     protected void createWorld(CentralControlService service) {
+        System.out.println("-- Initializing World --");
+
+        System.out.println("Initializing Fields...");
         field1 = service.addField(6,6);
         field2 = service.addField(5,5);
         field3 = service.addField(3,3);
+        System.out.println("- Done");
 
+        System.out.println("Initializing Mining Machines...");
         miningMachine1 = service.addMiningMachine("marvin");
         miningMachine2 = service.addMiningMachine("darwin");
+        System.out.println("- Done");
 
+        System.out.println("Setting up Barriers...");
         service.addBarrier( field1, "(0,3)-(2,3)" );
         service.addBarrier( field1, "(3,0)-(3,3)" );
         service.addBarrier( field2, "(0,2)-(4,2)" );
+        System.out.println("- Done");
 
+        System.out.println("Initializing Technologies...");
         transportTechnology1 = service.addTransportTechnology("Tunnel");
         transportTechnology2 = service.addTransportTechnology("Conveyor belt");
+        System.out.println("- Done");
 
+        System.out.println("Initializing Connections...");
         connection1 = service.addConnection(transportTechnology1, field1, "(1,1)", field2, "(0,1)");
+        System.out.println("     UUID-1: " + connection1);
         connection2 = service.addConnection(transportTechnology1, field2, "(1,0)", field3, "(2,2)");
+        System.out.println("     UUID-2: " + connection2);
         connection3 = service.addConnection(transportTechnology2, field3, "(2,2)", field2, "(1,0)");
+        System.out.println("     UUID-3: " + connection3);
+        System.out.println("- Done");
+
+        System.out.println("-- Finished World Creation --");
     }
 
     protected void assertPosition(

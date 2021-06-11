@@ -8,11 +8,9 @@ import thkoeln.coco.ad.instruction.EntryInstruction;
 import thkoeln.coco.ad.instruction.Instruction;
 import thkoeln.coco.ad.instruction.MoveInstruction;
 import thkoeln.coco.ad.instruction.TransportInstruction;
+import thkoeln.coco.ad.primitive.Coordinate;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
@@ -27,8 +25,8 @@ public class MiningMachine {
     private String name;
 
     @Getter
-    @OneToOne
-    private Square currentSquare = null;
+    @Embedded
+    private Coordinate currentPosition = null;
 
     @Getter
     @ManyToOne
@@ -55,17 +53,36 @@ public class MiningMachine {
     }*/
 
     public boolean executeMoveInstruction(MoveInstruction instruction) {
-        return false;
+        if (this.currentField == null) {
+            throw new MiningMachineException("Tried to move Mining Machine without first entering onto a field");
+        }
+        switch (instruction.getDirection()) {
+            case "no":
+                return true;
+            case "so":
+                return true;
+            case "ea":
+                return true;
+            case "we":
+                return true;
+            default:
+                throw new MiningMachineException("I don't know how, but you managed to provide invalid movement instructions...");
+        }
     }
 
     public boolean executeTransportInstruction(TransportInstruction instruction) {
         return false;
     }
 
-    public boolean executeEntryInstruction(EntryInstruction instruction, Field entryField) {
-        if (currentSquare == null) {
-
-            return true;
+    public boolean executeEntryInstruction(Field entryField) {
+        if (currentPosition == null) {
+            if (entryField.getEntrySquare().getBlocked()) {
+                return false;
+            } else {
+                this.currentPosition = new Coordinate(0, 0);
+                this.currentField = entryField;
+                return true;
+            }
         } else return false;
     }
 }
