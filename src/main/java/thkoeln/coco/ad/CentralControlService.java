@@ -5,13 +5,13 @@ import org.springframework.stereotype.Service;
 import thkoeln.coco.ad.field.Barrier;
 import thkoeln.coco.ad.field.FieldRepository;
 import thkoeln.coco.ad.field.SquareRepository;
+import thkoeln.coco.ad.instruction.*;
 import thkoeln.coco.ad.miningMachine.MiningMachineException;
 import thkoeln.coco.ad.miningMachine.MiningMachineRepository;
 import thkoeln.coco.ad.transport.Connection;
 import thkoeln.coco.ad.field.Field;
 import thkoeln.coco.ad.transport.ConnectionRepository;
 import thkoeln.coco.ad.transport.TransportTechnology;
-import thkoeln.coco.ad.instruction.InstructionFactory;
 import thkoeln.coco.ad.miningMachine.MiningMachine;
 import thkoeln.coco.ad.transport.TransportTechnologyRepository;
 
@@ -127,7 +127,17 @@ public class CentralControlService {
      */
     public Boolean executeCommand(UUID miningMachineId, String taskString) {
         MiningMachine machine = machineRepository.findById(miningMachineId).orElseThrow(() -> new MiningMachineException("Nonexisting MiningMachineID provided: " + miningMachineId));
-        return machine.executeInstruction(InstructionFactory.getInstruction(taskString));
+        if(InstructionFactory.getInstruction(taskString) instanceof MoveInstruction){
+            MoveInstruction instruction = InstructionFactory.getInstruction(taskString);
+            return machine.executeMoveInstruction(instruction);
+        }
+        if(InstructionFactory.getInstruction(taskString) instanceof TransportInstruction){
+
+        }
+        if(InstructionFactory.getInstruction(taskString) instanceof EntryInstruction){
+
+        }
+        throw new MiningMachineException("No executable command provided");
     }
 
     /**

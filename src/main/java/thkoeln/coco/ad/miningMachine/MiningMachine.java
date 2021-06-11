@@ -41,7 +41,7 @@ public class MiningMachine {
         this.name = name;
     }
 
-    public <T extends Instruction> boolean executeInstruction(T instruction) {
+    /*public <T extends Instruction> boolean executeInstruction(T instruction) {
         if (instruction instanceof MoveInstruction) {
             return executeMoveInstruction((MoveInstruction) instruction);
         }
@@ -52,17 +52,17 @@ public class MiningMachine {
             return executeEntryInstruction((EntryInstruction) instruction);
         }
         throw new MiningMachineException("No valid machine instruction provided");
-    }
+    }*/
 
-    private boolean executeMoveInstruction(MoveInstruction instruction) {
+    public boolean executeMoveInstruction(MoveInstruction instruction) {
         return false;
     }
 
-    private boolean executeTransportInstruction(TransportInstruction instruction) {
+    public boolean executeTransportInstruction(TransportInstruction instruction) {
         return false;
     }
 
-    private boolean executeEntryInstruction(EntryInstruction instruction) {
+    public boolean executeEntryInstruction(EntryInstruction instruction, Field entryField) {
         if (currentSquare == null) {
 
             return true;
