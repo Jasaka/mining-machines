@@ -26,6 +26,7 @@ public abstract class MovementTests {
     protected UUID connection2;
     protected UUID connection3;
 
+
     private ObjectInfoRetriever objectInfoRetriever;
 
 

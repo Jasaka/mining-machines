@@ -141,6 +141,8 @@ public class CentralControlService {
         }
         if (InstructionFactory.getInstruction(taskString) instanceof TransportInstruction) {
             TransportInstruction instruction = InstructionFactory.getInstruction(taskString);
+            Field entryField = fieldRepository.findById(instruction.getTargetedFieldId()).orElseThrow(() -> new MiningMachineException("Nonexistent FieldID provided: " + instruction.getTargetedFieldId()));
+            return machine.executeTransportInstruction();
         }
         if (InstructionFactory.getInstruction(taskString) instanceof EntryInstruction) {
             EntryInstruction instruction = InstructionFactory.getInstruction(taskString);
