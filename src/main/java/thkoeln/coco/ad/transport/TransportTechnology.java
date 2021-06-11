@@ -15,11 +15,11 @@ public class TransportTechnology {
     private final UUID id = UUID.randomUUID();
     private String technologyName;
 
-    //  TODO: fix german primary key violation exception
-    /*@OneToMany
-    private final List<Connection> connections = new ArrayList<>();*/
-    @ElementCollection(fetch = FetchType.EAGER)
-    private final List<UUID> connectionIds = new ArrayList<>();
+    //  TODO: fix loop/hangup occurring during MovementTests.createWorlds() third connection initialization
+    @OneToMany
+    private final List<Connection> connections = new ArrayList<>();
+    /*@ElementCollection(fetch = FetchType.EAGER)
+    private final List<UUID> connectionIds = new ArrayList<>();*/
 
     protected TransportTechnology() {
     }
@@ -29,7 +29,7 @@ public class TransportTechnology {
     }
 
     public void addConnection(Connection connection) {
-//        connections.add(connection);
-        connectionIds.add(connection.getId());
+        connections.add(connection);
+//        connectionIds.add(connection.getId());
     }
 }
