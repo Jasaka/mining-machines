@@ -57,13 +57,13 @@ public class MiningMachine {
             throw new MiningMachineException("Tried to move Mining Machine without first entering onto a field");
         }
         switch (instruction.getDirection()) {
-            case "no":
+            case NO:
                 return true;
-            case "so":
+            case SO:
                 return true;
-            case "ea":
+            case EA:
                 return true;
-            case "we":
+            case WE:
                 return true;
             default:
                 throw new MiningMachineException("I don't know how, but you managed to provide invalid movement instructions...");

@@ -19,7 +19,7 @@ public class TransportTechnology {
     /*@OneToMany
     private final List<Connection> connections = new ArrayList<>();*/
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection
     private final List<UUID> connectionIds = new ArrayList<>();
 
     protected TransportTechnology() {
