@@ -16,11 +16,8 @@ public class TransportTechnology {
     private String technologyName;
 
     //  TODO: fix loop/hangup occurring during MovementTests.createWorlds() third connection initialization
-    /*@OneToMany
-    private final List<Connection> connections = new ArrayList<>();*/
-
-    @ElementCollection
-    private final List<UUID> connectionIds = new ArrayList<>();
+    @OneToMany
+    private final List<Connection> connections = new ArrayList<>();
 
     protected TransportTechnology() {
     }
@@ -30,7 +27,6 @@ public class TransportTechnology {
     }
 
     public void addConnection(Connection connection) {
-        //connections.add(connection);
-        connectionIds.add(connection.getId());
+        connections.add(connection);
     }
 }

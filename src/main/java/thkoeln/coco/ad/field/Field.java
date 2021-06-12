@@ -18,7 +18,7 @@ public class Field {
     private Integer height, width;
 
     @Getter
-    @OneToMany(targetEntity = Square.class, cascade = CascadeType.ALL)
+    @OneToMany
     private final List<Square> squares = new ArrayList<>();
 
     @Transient
@@ -69,36 +69,45 @@ public class Field {
         return field[0][0];
     }
 
-    public Square getSquare(int x, int y) {
+    public Square getSquare(Coordinate coordinate) {
         ensureFieldIsInitialized();
         try {
-            return field[x][y];
+            return field[coordinate.getX()][coordinate.getY()];
         } catch (NullPointerException e) {
             throw new MiningMachineException("Tried Accessing nonexistent square.");
         }
     }
 
     // TODO: Finish logic
-    public boolean getHorizontalBlockage(Coordinate goal, Direction direction) {
+    public boolean hasHorizontalBlockage(Coordinate targetSquare, Direction direction) {
         switch (direction) {
             case NO:
-                return true;
+                if (this.getSquare(targetSquare).getBlockedByMachine()){
+                    return true;
+                }
             case SO:
                 return false;
-
         }
         return true;
     }
 
     // TODO: finish logic
-    public boolean getVerticalBlockage(Coordinate goal, Direction direction) {
+    public boolean hasVerticalBlockage(Coordinate targetSquare, Direction direction) {
         switch (direction) {
             case EA:
                 return true;
             case WE:
                 return false;
-
         }
         return true;
+    }
+
+    private boolean hasBarrierBlockage(Coordinate targetSquare){
+        for (Barrier barrier: barriers) {
+            for (Coordinate coordinate: barrier.getEncompassingCoordinates()) {
+
+            }
+        }
+        return false;
     }
 }

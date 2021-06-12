@@ -7,6 +7,9 @@ import thkoeln.coco.ad.miningMachine.MiningMachineException;
 import thkoeln.coco.ad.primitive.Coordinate;
 
 import javax.persistence.Embeddable;
+import javax.persistence.Transient;
+import java.util.ArrayList;
+import java.util.List;
 
 @Embeddable
 @Getter
@@ -43,5 +46,27 @@ public class Barrier {
         if ((x1.equals(x2) && y1.equals(y2))) {
             throw new MiningMachineException("Invalid Barrier String - Tried creating dot barrier");
         }
+    }
+
+    @Transient
+    public List<Coordinate> getEncompassingCoordinates(){
+        List<Coordinate> encompassingCoordinates = new ArrayList<>();
+        int startValue;
+        if (this.startCoordinate.getX().equals(this.endCoordinate.getX())){
+            if (startCoordinate.getY() > endCoordinate.getY()){
+                startValue = endCoordinate.getY();
+            } else startValue = startCoordinate.getY();
+            for (int i = 0; i <= Math.abs(startCoordinate.getY() - endCoordinate.getY()); i++){
+                encompassingCoordinates.add(new Coordinate(startCoordinate.getX(), startValue + i));
+            }
+        } else{
+            if (startCoordinate.getX() > endCoordinate.getX()){
+                startValue = endCoordinate.getX();
+            } else startValue = startCoordinate.getX();
+            for (int i = 0; i <= Math.abs(startCoordinate.getX() - endCoordinate.getX()); i++){
+                encompassingCoordinates.add(new Coordinate(startCoordinate.getY(), startValue + i));
+            }
+        }
+        return encompassingCoordinates;
     }
 }

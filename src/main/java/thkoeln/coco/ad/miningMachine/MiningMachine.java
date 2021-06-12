@@ -76,7 +76,7 @@ public class MiningMachine {
 
     public boolean executeEntryInstruction(Field entryField) {
         if (currentPosition == null) {
-            if (entryField.getEntrySquare().getBlocked()) {
+            if (entryField.getEntrySquare().getBlockedByMachine()) {
                 return false;
             } else {
                 this.currentPosition = new Coordinate(0, 0);

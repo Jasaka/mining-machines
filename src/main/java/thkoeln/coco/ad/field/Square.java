@@ -18,7 +18,7 @@ public class Square {
     @Embedded
     private Coordinate coordinate;
 
-    private Boolean blocked = false;
+    private Boolean blockedByMachine = false;
 
     protected Square(){}
 
@@ -31,10 +31,10 @@ public class Square {
     }
 
     public void setBlocked(){
-        this.blocked = true;
+        this.blockedByMachine = true;
     }
 
     public void setUnblocked(){
-        this.blocked = false;
+        this.blockedByMachine = false;
     }
 }
