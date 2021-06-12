@@ -45,6 +45,10 @@ public class Field {
                 squares.add(field[x][y]);
             }
         }
+        barriers.add(new Barrier(new Coordinate(0,0), new Coordinate(0,height)));
+        barriers.add(new Barrier(new Coordinate(0,0), new Coordinate(width,0)));
+        barriers.add(new Barrier(new Coordinate(width,0), new Coordinate(width,height)));
+        barriers.add(new Barrier(new Coordinate(0,height), new Coordinate(width,height)));
     }
 
     private void ensureFieldIsInitialized() {
@@ -78,7 +82,6 @@ public class Field {
         }
     }
 
-    // TODO: Finish logic
     public boolean hasHorizontalBlockage(Coordinate targetSquare, Direction direction) {
         switch (direction) {
             case NO:
@@ -95,7 +98,6 @@ public class Field {
         return true;
     }
 
-    // TODO: finish logic
     public boolean hasVerticalBlockage(Coordinate targetSquare, Direction direction) {
         switch (direction) {
             case EA:

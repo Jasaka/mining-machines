@@ -40,64 +40,100 @@ public class MiningMachine {
         this.name = name;
     }
 
-    /*public <T extends Instruction> boolean executeInstruction(T instruction) {
-        if (instruction instanceof MoveInstruction) {
-            return executeMoveInstruction((MoveInstruction) instruction);
-        }
-        if (instruction instanceof TransportInstruction) {
-            return executeTransportInstruction((TransportInstruction) instruction);
-        }
-        if (instruction instanceof EntryInstruction) {
-            return executeEntryInstruction((EntryInstruction) instruction);
-        }
-        throw new MiningMachineException("No valid machine instruction provided");
-    }*/
-
     public boolean executeMoveInstruction(MoveInstruction instruction) {
         if (this.currentField == null) {
             throw new MiningMachineException("Tried to move Mining Machine without first entering onto a field");
         }
         switch (instruction.getDirection()) {
             case NO:
-                for (int i = 0; i < instruction.getSteps(); i++) {
-                    if (currentPosition.getWithAddedX(1).getX() < currentField.getHeight()) {
-                        if (!currentField.hasHorizontalBlockage(currentPosition.getWithAddedY(1), Direction.NO)) {
-
-                        } else return true;
-                    } else return true;
-                }
-                break;
+                return tryToMoveNorth(instruction);
             case SO:
-                for (int i = 0; i < instruction.getSteps(); i++) {
-                    if (currentPosition.getWithAddedY(-1).getY() >= 0) {
-                        if (!currentField.hasHorizontalBlockage(currentPosition.getWithAddedY(-1), Direction.NO)) {
-
-                        } else return true;
-                    } else return true;
-                }
-                break;
+                return tryToMoveSouth(instruction);
             case EA:
-                for (int i = 0; i < instruction.getSteps(); i++) {
-                    if (currentPosition.getWithAddedX(1).getX() < currentField.getWidth()) {
-                        if (!currentField.hasHorizontalBlockage(currentPosition.getWithAddedX(1), Direction.NO)) {
-
-                        } else return true;
-                    } else return true;
-                }
-                break;
+                return tryToMoveEast(instruction);
             case WE:
-                for (int i = 0; i < instruction.getSteps(); i++) {
-                    if (currentPosition.getWithAddedX(-1).getX() >= 0) {
-                        if (!currentField.hasHorizontalBlockage(currentPosition.getWithAddedX(-1), Direction.NO)) {
-
-                        } else return true;
-                    } else return true;
-                }
-                break;
+                return tryToMoveWest(instruction);
             default:
                 throw new MiningMachineException("I don't know how, but you managed to provide invalid movement instructions...");
         }
-        return true;
+    }
+
+    private boolean tryToMoveWest(MoveInstruction instruction) {
+        for (int i = 0; i < instruction.getSteps(); i++) {
+            if (currentPosition.getWithAddedX(-1).getX() >= 0) {
+                if (!currentField.hasVerticalBlockage(currentPosition.getWithAddedX(-1), Direction.WE)) {
+                    moveOneStepHorizontally(instruction.getDirection());
+                } else return true;
+            } else return true;
+        }
+        return false;
+    }
+
+    private boolean tryToMoveEast(MoveInstruction instruction) {
+        for (int i = 0; i < instruction.getSteps(); i++) {
+            if (currentPosition.getWithAddedX(1).getX() < currentField.getWidth()) {
+                if (!currentField.hasVerticalBlockage(currentPosition.getWithAddedX(1), Direction.EA)) {
+                    moveOneStepHorizontally(instruction.getDirection());
+                } else return true;
+            } else return true;
+        }
+        return false;
+    }
+
+    private boolean tryToMoveSouth(MoveInstruction instruction) {
+        for (int i = 0; i < instruction.getSteps(); i++) {
+            if (currentPosition.getWithAddedY(-1).getY() >= 0) {
+                if (!currentField.hasHorizontalBlockage(currentPosition.getWithAddedY(-1), Direction.SO)) {
+                    moveOneStepVertically(instruction.getDirection());
+                } else return true;
+            } else return true;
+        }
+        return false;
+    }
+
+    private boolean tryToMoveNorth(MoveInstruction instruction) {
+        for (int i = 0; i < instruction.getSteps(); i++) {
+            if (currentPosition.getWithAddedX(1).getY() < currentField.getHeight()) {
+                if (!currentField.hasHorizontalBlockage(currentPosition.getWithAddedY(1), Direction.NO)) {
+                    moveOneStepVertically(instruction.getDirection());
+                } else return true;
+            } else return true;
+        }
+        return false;
+    }
+
+    private void moveOneStepHorizontally(Direction direction) {
+        int directionFactor;
+        switch (direction) {
+            case EA:
+                directionFactor = 1;
+                break;
+            case WE:
+                directionFactor = -1;
+                break;
+            default:
+                return;
+        }
+        this.currentPosition = currentPosition.getWithAddedX(directionFactor);
+        currentField.getSquare(currentPosition).setBlocked();
+        currentField.getSquare(currentPosition.getWithAddedX(-1 * directionFactor)).setUnblocked();
+    }
+
+    private void moveOneStepVertically(Direction direction) {
+        int directionFactor;
+        switch (direction) {
+            case NO:
+                directionFactor = 1;
+                break;
+            case SO:
+                directionFactor = -1;
+                break;
+            default:
+                return;
+        }
+        this.currentPosition = currentPosition.getWithAddedY(directionFactor);
+        currentField.getSquare(currentPosition).setBlocked();
+        currentField.getSquare(currentPosition.getWithAddedY(-1 * directionFactor)).setUnblocked();
     }
 
     public boolean executeTransportInstruction(TransportInstruction instruction) {
@@ -111,6 +147,7 @@ public class MiningMachine {
             } else {
                 this.currentPosition = new Coordinate(0, 0);
                 this.currentField = entryField;
+                this.currentField.getEntrySquare().setBlocked();
                 return true;
             }
         } else return false;
