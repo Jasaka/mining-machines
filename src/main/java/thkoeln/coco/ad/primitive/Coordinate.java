@@ -24,4 +24,16 @@ public class Coordinate {
     public String toString() {
         return "(" + x + "," + y + ")";
     }
+
+    public boolean equals(Coordinate coordinate){
+        return this.x.equals(coordinate.getX()) && this.y.equals(coordinate.getY());
+    }
+
+    public Coordinate getWithAddedX(Integer addition){
+        return new Coordinate(this.x + addition, this.y);
+    }
+
+    public Coordinate getWithAddedY(Integer addition){
+        return new Coordinate(this.x, this.y + addition);
+    }
 }

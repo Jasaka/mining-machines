@@ -15,7 +15,6 @@ public class TransportTechnology {
     private final UUID id = UUID.randomUUID();
     private String technologyName;
 
-    //  TODO: fix loop/hangup occurring during MovementTests.createWorlds() third connection initialization
     @OneToMany
     private final List<Connection> connections = new ArrayList<>();
 

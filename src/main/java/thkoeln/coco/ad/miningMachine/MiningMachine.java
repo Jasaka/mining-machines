@@ -9,6 +9,7 @@ import thkoeln.coco.ad.instruction.Instruction;
 import thkoeln.coco.ad.instruction.MoveInstruction;
 import thkoeln.coco.ad.instruction.TransportInstruction;
 import thkoeln.coco.ad.primitive.Coordinate;
+import thkoeln.coco.ad.primitive.Direction;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -58,16 +59,45 @@ public class MiningMachine {
         }
         switch (instruction.getDirection()) {
             case NO:
-                return true;
+                for (int i = 0; i < instruction.getSteps(); i++) {
+                    if (currentPosition.getWithAddedX(1).getX() < currentField.getHeight()) {
+                        if (!currentField.hasHorizontalBlockage(currentPosition.getWithAddedY(1), Direction.NO)) {
+
+                        } else return true;
+                    } else return true;
+                }
+                break;
             case SO:
-                return true;
+                for (int i = 0; i < instruction.getSteps(); i++) {
+                    if (currentPosition.getWithAddedY(-1).getY() >= 0) {
+                        if (!currentField.hasHorizontalBlockage(currentPosition.getWithAddedY(-1), Direction.NO)) {
+
+                        } else return true;
+                    } else return true;
+                }
+                break;
             case EA:
-                return true;
+                for (int i = 0; i < instruction.getSteps(); i++) {
+                    if (currentPosition.getWithAddedX(1).getX() < currentField.getWidth()) {
+                        if (!currentField.hasHorizontalBlockage(currentPosition.getWithAddedX(1), Direction.NO)) {
+
+                        } else return true;
+                    } else return true;
+                }
+                break;
             case WE:
-                return true;
+                for (int i = 0; i < instruction.getSteps(); i++) {
+                    if (currentPosition.getWithAddedX(-1).getX() >= 0) {
+                        if (!currentField.hasHorizontalBlockage(currentPosition.getWithAddedX(-1), Direction.NO)) {
+
+                        } else return true;
+                    } else return true;
+                }
+                break;
             default:
                 throw new MiningMachineException("I don't know how, but you managed to provide invalid movement instructions...");
         }
+        return true;
     }
 
     public boolean executeTransportInstruction(TransportInstruction instruction) {

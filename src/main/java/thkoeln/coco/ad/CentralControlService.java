@@ -92,19 +92,11 @@ public class CentralControlService {
         Field sourceField = fieldRepository.findById(sourceFieldId).orElseThrow(() -> new MiningMachineException("Nonexisting FieldID provided: " + sourceFieldId));
         Field destinationField = fieldRepository.findById(destinationFieldId).orElseThrow(() -> new MiningMachineException("Nonexisting FieldID provided: " + destinationFieldId));
 
-        System.out.println("   Initializing new Connection...");
         Connection connection = new Connection(sourceField, sourcePointString, destinationField, destinationPointString);
-        System.out.println("   - Done");
-        System.out.println("   Saving Connection...");
         connectionRepository.save(connection);
-        System.out.println("   - Done");
 
-        System.out.println("   Adding connection to technology...");
         technology.addConnection(connection);
-        System.out.println("   - Done");
-        System.out.println("   Saving technology...");
         transportRepository.save(technology);
-        System.out.println("   - Done");
         return connection.getId();
     }
 

@@ -85,8 +85,12 @@ public class Field {
                 if (this.getSquare(targetSquare).getBlockedByMachine()){
                     return true;
                 }
+                return hasHorizontalBarrierBlockage(targetSquare);
             case SO:
-                return false;
+                if (this.getSquare(targetSquare).getBlockedByMachine()){
+                    return true;
+                }
+                return hasHorizontalBarrierBlockage(targetSquare.getWithAddedY(-1));
         }
         return true;
     }
@@ -95,19 +99,48 @@ public class Field {
     public boolean hasVerticalBlockage(Coordinate targetSquare, Direction direction) {
         switch (direction) {
             case EA:
-                return true;
+                if (this.getSquare(targetSquare).getBlockedByMachine()){
+                    return true;
+                }
+                return hasVerticalBarrierBlockage(targetSquare);
             case WE:
-                return false;
+                if (this.getSquare(targetSquare).getBlockedByMachine()){
+                    return true;
+                }
+                return hasVerticalBarrierBlockage(targetSquare.getWithAddedX(1));
         }
         return true;
     }
 
-    private boolean hasBarrierBlockage(Coordinate targetSquare){
+    private boolean hasVerticalBarrierBlockage(Coordinate targetSquare){
+        boolean targetSquareBlocked = false;
+        boolean aboveTargetSquareBlocked = false;
         for (Barrier barrier: barriers) {
             for (Coordinate coordinate: barrier.getEncompassingCoordinates()) {
-
+                if (targetSquare.equals(coordinate)){
+                    targetSquareBlocked = true;
+                }
+                if (targetSquare.getWithAddedY(1).equals(coordinate)){
+                    aboveTargetSquareBlocked = true;
+                }
             }
         }
-        return false;
+        return targetSquareBlocked && aboveTargetSquareBlocked;
+    }
+
+    private boolean hasHorizontalBarrierBlockage(Coordinate targetSquare){
+        boolean targetSquareBlocked = false;
+        boolean rightOfTargetSquareBlocked = false;
+        for (Barrier barrier: barriers) {
+            for (Coordinate coordinate: barrier.getEncompassingCoordinates()) {
+                if (targetSquare.equals(coordinate)){
+                    targetSquareBlocked = true;
+                }
+                if (targetSquare.getWithAddedX(1).equals(coordinate)){
+                    rightOfTargetSquareBlocked = true;
+                }
+            }
+        }
+        return targetSquareBlocked && rightOfTargetSquareBlocked;
     }
 }
