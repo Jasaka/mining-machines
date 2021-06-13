@@ -3,6 +3,7 @@ package thkoeln.coco.ad.field;
 import lombok.Getter;
 import thkoeln.coco.ad.primitive.Coordinate;
 
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,6 +14,7 @@ import java.util.UUID;
 public class Square {
 
     @Id
+    @Column(columnDefinition = "BINARY(16)")
     private final UUID id = UUID.randomUUID();
 
     @Embedded

@@ -16,6 +16,7 @@ public class MiningMachine {
 
     @Id
     @Getter
+    @Column(columnDefinition = "BINARY(16)")
     private final UUID id = UUID.randomUUID();
 
     @Getter

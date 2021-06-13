@@ -12,6 +12,7 @@ import java.util.*;
 public class Field {
     @Getter
     @Id
+    @Column(columnDefinition = "BINARY(16)")
     private final UUID id = UUID.randomUUID();
 
     @Getter

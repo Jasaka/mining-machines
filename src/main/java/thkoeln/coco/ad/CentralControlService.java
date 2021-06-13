@@ -1,6 +1,7 @@
 package thkoeln.coco.ad;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import thkoeln.coco.ad.field.Barrier;
 import thkoeln.coco.ad.field.FieldRepository;
@@ -16,6 +17,7 @@ import thkoeln.coco.ad.transport.TransportTechnology;
 import thkoeln.coco.ad.miningMachine.MiningMachine;
 import thkoeln.coco.ad.transport.TransportTechnologyRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
 
@@ -139,6 +141,7 @@ public class CentralControlService {
 
             return successfulMove;
         }
+        //TODO: find nicer way of doing this, maybe put some of it into miningMachine, dunno
         if (InstructionFactory.getInstruction(taskString) instanceof TransportInstruction) {
             TransportInstruction instruction = InstructionFactory.getInstruction(taskString);
             Field destinationField = fieldRepository.findById(instruction.getTargetedFieldId()).orElseThrow(() -> new MiningMachineException("Nonexistent FieldID provided: " + instruction.getTargetedFieldId()));
@@ -203,5 +206,29 @@ public class CentralControlService {
     public String getMiningMachinePoint(UUID miningMachineId) {
         MiningMachine machine = machineRepository.findById(miningMachineId).orElseThrow(() -> new MiningMachineException("Nonexisting MiningMachineID provided: " + miningMachineId));
         return machine.getCurrentPosition().toString();
+    }
+
+    public MiningMachine getMiningMachineById(UUID id) {
+        MiningMachine machine = machineRepository.findById(id).orElseThrow(() -> new MiningMachineException("Nonexisting MiningMachineID provided: " + id));
+        return machine;
+    }
+
+    public UUID addMiningMachine(MiningMachine miningMachine) {
+        if (!machineRepository.findById(miningMachine.getId()).isPresent()){
+            machineRepository.save(miningMachine);
+        }
+        return miningMachine.getId();
+    }
+
+    @Transactional
+    public Field createOrGetInitialField(){
+        List<Field> fields = fieldRepository.findAll();
+        if (fields.isEmpty()){
+            Field field = new Field(5,5);
+            squareRepository.saveAll(field.getSquares());
+            fieldRepository.save(field);
+            return field;
+        }
+        return fields.get(0);
     }
 }

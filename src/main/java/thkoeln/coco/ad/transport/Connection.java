@@ -38,13 +38,18 @@ public class Connection {
             CoordinateInstruction sourcePointInstruction = InstructionFactory.getInstruction(sourcePointString);
             CoordinateInstruction destinationPointInstruction = InstructionFactory.getInstruction(destinationPointString);
 
-            //TODO: Check connection validity
-            
             this.sourceField = sourceField;
             this.destinationField = destinationField;
 
             this.coordinates.add(sourcePointInstruction.getCoordinate());
             this.coordinates.add(destinationPointInstruction.getCoordinate());
+
+            try {
+                sourceField.getSquare(sourcePointInstruction.getCoordinate());
+                destinationField.getSquare(destinationPointInstruction.getCoordinate());
+            } catch (IndexOutOfBoundsException e){
+                throw new MiningMachineException("Tried to connect nonexistent coordinates");
+            }
 
         } catch (ClassCastException e) {
             throw new MiningMachineException("Tried to apply wrong command type");
