@@ -79,35 +79,31 @@ public class Field {
     }
 
     public boolean hasHorizontalBlockage(Coordinate targetSquare, Direction direction) {
-        switch (direction) {
+        if (this.getSquare(targetSquare).getBlockedByMachine()) {
+            System.out.println(targetSquare.toString() + " is Blocked by Mining Machine");
+            return true;
+        } else switch (direction) {
             case NO:
-                if (this.getSquare(targetSquare).getBlockedByMachine()) {
-                    return true;
-                }
                 return hasHorizontalBarrierBlockage(targetSquare);
             case SO:
-                if (this.getSquare(targetSquare).getBlockedByMachine()) {
-                    return true;
-                }
                 return hasHorizontalBarrierBlockage(targetSquare.getWithAddedY(-1));
+            default:
+                return false;
         }
-        return true;
     }
 
     public boolean hasVerticalBlockage(Coordinate targetSquare, Direction direction) {
-        switch (direction) {
+        if (this.getSquare(targetSquare).getBlockedByMachine()) {
+            System.out.println(targetSquare.toString() + " is Blocked by Mining Machine");
+            return true;
+        } else switch (direction) {
             case EA:
-                if (this.getSquare(targetSquare).getBlockedByMachine()) {
-                    return true;
-                }
                 return hasVerticalBarrierBlockage(targetSquare);
             case WE:
-                if (this.getSquare(targetSquare).getBlockedByMachine()) {
-                    return true;
-                }
                 return hasVerticalBarrierBlockage(targetSquare.getWithAddedX(1));
+            default:
+                return false;
         }
-        return true;
     }
 
     private boolean hasVerticalBarrierBlockage(Coordinate targetSquare) {
@@ -117,17 +113,15 @@ public class Field {
             boolean aboveTargetSquareBlocked = false;
             for (Coordinate coordinate : barrier.getEncompassingCoordinates()) {
                 if (targetSquare.equals(coordinate)) {
-                    System.out.println("Target Square Blocked");
                     targetSquareBlocked = true;
                 }
                 if (targetSquare.getWithAddedY(1).equals(coordinate)) {
-                    System.out.println("Next to Target Square Blocked");
                     aboveTargetSquareBlocked = true;
                 }
             }
             hasBarrier = targetSquareBlocked && aboveTargetSquareBlocked;
+            if (hasBarrier) break;
         }
-        System.out.println(hasBarrier);
         return hasBarrier;
     }
 
@@ -138,17 +132,15 @@ public class Field {
             boolean rightOfTargetSquareBlocked = false;
             for (Coordinate coordinate : barrier.getEncompassingCoordinates()) {
                 if (targetSquare.equalsCoordinate(coordinate)) {
-                    System.out.println("Target Square Blocked");
                     targetSquareBlocked = true;
                 }
                 if (targetSquare.getWithAddedX(1).equalsCoordinate(coordinate)) {
-                    System.out.println("Next to Target Square Blocked");
                     rightOfTargetSquareBlocked = true;
                 }
             }
             hasBarrier = targetSquareBlocked && rightOfTargetSquareBlocked;
+            if (hasBarrier) break;
         }
-        System.out.println(hasBarrier);
         return hasBarrier;
     }
 }

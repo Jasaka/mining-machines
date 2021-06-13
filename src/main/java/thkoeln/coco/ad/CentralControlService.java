@@ -15,6 +15,7 @@ import thkoeln.coco.ad.transport.TransportTechnology;
 import thkoeln.coco.ad.miningMachine.MiningMachine;
 import thkoeln.coco.ad.transport.TransportTechnologyRepository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -129,19 +130,38 @@ public class CentralControlService {
         MiningMachine machine = machineRepository.findById(miningMachineId).orElseThrow(() -> new MiningMachineException("Nonexistent MiningMachineID provided: " + miningMachineId));
         if (InstructionFactory.getInstruction(taskString) instanceof MoveInstruction) {
             MoveInstruction instruction = InstructionFactory.getInstruction(taskString);
-            return machine.executeMoveInstruction(instruction);
+
+            boolean successfulMove = machine.executeMoveInstruction(instruction);
+
+            machineRepository.save(machine);
+            fieldRepository.save(machine.getCurrentField());
+
+            return successfulMove;
         }
         if (InstructionFactory.getInstruction(taskString) instanceof TransportInstruction) {
             TransportInstruction instruction = InstructionFactory.getInstruction(taskString);
-            Field entryField = fieldRepository.findById(instruction.getTargetedFieldId()).orElseThrow(() -> new MiningMachineException("Nonexistent FieldID provided: " + instruction.getTargetedFieldId()));
+            Field transportField = fieldRepository.findById(instruction.getTargetedFieldId()).orElseThrow(() -> new MiningMachineException("Nonexistent FieldID provided: " + instruction.getTargetedFieldId()));
             return machine.executeTransportInstruction(instruction);
         }
         if (InstructionFactory.getInstruction(taskString) instanceof EntryInstruction) {
             EntryInstruction instruction = InstructionFactory.getInstruction(taskString);
             Field entryField = fieldRepository.findById(instruction.getTargetedFieldId()).orElseThrow(() -> new MiningMachineException("Nonexistent FieldID provided: " + instruction.getTargetedFieldId()));
-            return machine.executeEntryInstruction(entryField);
+
+            boolean successfulEntry = machine.executeEntryInstruction(entryField);
+
+            machineRepository.save(machine);
+            if (machine.getCurrentField() != null){
+                fieldRepository.save(machine.getCurrentField());
+            }
+
+            return successfulEntry;
         }
         throw new MiningMachineException("No executable command provided");
+    }
+
+    private void saveChangedFields(Field currentField, Field oldField){
+        fieldRepository.save(currentField);
+        fieldRepository.save(oldField);
     }
 
     /**

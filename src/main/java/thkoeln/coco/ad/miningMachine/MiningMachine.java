@@ -37,6 +37,10 @@ public class MiningMachine {
         this.name = name;
     }
 
+    public void updateField(Field field){
+        this.currentField = field;
+    }
+
     public boolean executeMoveInstruction(MoveInstruction instruction) {
         if (this.currentField == null) {
             throw new MiningMachineException("Tried to move Mining Machine without first entering onto a field");
@@ -58,9 +62,9 @@ public class MiningMachine {
     private boolean tryToMoveWest(MoveInstruction instruction) {
         for (int i = 0; i < instruction.getSteps(); i++) {
             if (currentPosition.getWithAddedX(-1).getX() >= 0) {
-                if (!currentField.hasVerticalBlockage(currentPosition.getWithAddedX(-1), Direction.WE)) {
+                if (!currentField.hasVerticalBlockage(currentPosition.getWithAddedX(-1), instruction.getDirection())) {
                     moveOneStepHorizontally(instruction.getDirection());
-                }
+                } else return true;
             }
         }
         return true;
@@ -69,9 +73,9 @@ public class MiningMachine {
     private boolean tryToMoveEast(MoveInstruction instruction) {
         for (int i = 0; i < instruction.getSteps(); i++) {
             if (currentPosition.getWithAddedX(1).getX() < currentField.getWidth()) {
-                if (!currentField.hasVerticalBlockage(currentPosition.getWithAddedX(1), Direction.EA)) {
+                if (!currentField.hasVerticalBlockage(currentPosition.getWithAddedX(1), instruction.getDirection())) {
                     moveOneStepHorizontally(instruction.getDirection());
-                }
+                } else return true;
             }
         }
         return true;
@@ -80,9 +84,9 @@ public class MiningMachine {
     private boolean tryToMoveSouth(MoveInstruction instruction) {
         for (int i = 0; i < instruction.getSteps(); i++) {
             if (currentPosition.getWithAddedY(-1).getY() >= 0) {
-                if (!currentField.hasHorizontalBlockage(currentPosition.getWithAddedY(-1), Direction.SO)) {
+                if (!currentField.hasHorizontalBlockage(currentPosition.getWithAddedY(-1), instruction.getDirection())) {
                     moveOneStepVertically(instruction.getDirection());
-                }
+                } else return true;
             }
         }
         return true;
@@ -91,9 +95,9 @@ public class MiningMachine {
     private boolean tryToMoveNorth(MoveInstruction instruction) {
         for (int i = 0; i < instruction.getSteps(); i++) {
             if (currentPosition.getWithAddedY(1).getY() < currentField.getHeight()) {
-                if (!currentField.hasHorizontalBlockage(currentPosition.getWithAddedY(1), Direction.NO)) {
+                if (!currentField.hasHorizontalBlockage(currentPosition.getWithAddedY(1), instruction.getDirection())) {
                     moveOneStepVertically(instruction.getDirection());
-                }
+                } else return true;
             }
         }
         return true;
