@@ -93,7 +93,7 @@ public class MiningMachine {
 
     private boolean tryToMoveNorth(MoveInstruction instruction) {
         for (int i = 0; i < instruction.getSteps(); i++) {
-            if (currentPosition.getWithAddedX(1).getY() < currentField.getHeight()) {
+            if (currentPosition.getWithAddedY(1).getY() < currentField.getHeight()) {
                 if (!currentField.hasHorizontalBlockage(currentPosition.getWithAddedY(1), Direction.NO)) {
                     moveOneStepVertically(instruction.getDirection());
                 } else return true;
