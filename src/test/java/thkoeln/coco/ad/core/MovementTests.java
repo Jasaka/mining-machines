@@ -36,21 +36,20 @@ public abstract class MovementTests {
 
 
     protected void createWorld(CentralControlService service) {
-        field1 = service.addField(6,6);
-        field2 = service.addField(5,5);
-        field3 = service.addField(3,3);
+        field1 = service.addField(6, 6);
+        field2 = service.addField(5, 5);
+        field3 = service.addField(3, 3);
 
         miningMachine1 = service.addMiningMachine("marvin");
         miningMachine2 = service.addMiningMachine("darwin");
 
-        service.addBarrier( field1, "(0,3)-(2,3)" );
-        service.addBarrier( field1, "(3,0)-(3,3)" );
-        service.addBarrier( field2, "(0,2)-(4,2)" );
+        service.addBarrier(field1, "(0,3)-(2,3)");
+        service.addBarrier(field1, "(3,0)-(3,3)");
+        service.addBarrier(field2, "(0,2)-(4,2)");
 
         transportTechnology1 = service.addTransportTechnology("Tunnel");
         transportTechnology2 = service.addTransportTechnology("Conveyor belt");
 
-        System.out.println("Initializing Connections...");
         connection1 = service.addConnection(transportTechnology1, field1, "(1,1)", field2, "(0,1)");
         connection2 = service.addConnection(transportTechnology1, field2, "(1,0)", field3, "(2,2)");
         connection3 = service.addConnection(transportTechnology2, field3, "(2,2)", field2, "(1,0)");
@@ -61,12 +60,12 @@ public abstract class MovementTests {
             UUID expectedFieldId, String expectedXY) throws Exception {
 
         // Assert Grid
-        UUID actualFieldId = service.getMiningMachineFieldId ( miningMachineId );
-        assertEquals( expectedFieldId, actualFieldId );
+        UUID actualFieldId = service.getMiningMachineFieldId(miningMachineId);
+        assertEquals(expectedFieldId, actualFieldId);
 
         // Assert Pos
-        String actualPointString = service.getMiningMachinePoint( miningMachineId );
-        assertEquals( expectedXY, actualPointString );
+        String actualPointString = service.getMiningMachinePoint(miningMachineId);
+        assertEquals(expectedXY, actualPointString);
     }
 
     protected void executeTasks(CentralControlService service, UUID miningMachine, String[] tasksArray) {

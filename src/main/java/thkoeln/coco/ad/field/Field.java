@@ -45,10 +45,6 @@ public class Field {
                 squares.add(field[x][y]);
             }
         }
-        barriers.add(new Barrier(new Coordinate(0,0), new Coordinate(0,height)));
-        barriers.add(new Barrier(new Coordinate(0,0), new Coordinate(width,0)));
-        barriers.add(new Barrier(new Coordinate(width,0), new Coordinate(width,height)));
-        barriers.add(new Barrier(new Coordinate(0,height), new Coordinate(width,height)));
     }
 
     private void ensureFieldIsInitialized() {
@@ -85,12 +81,12 @@ public class Field {
     public boolean hasHorizontalBlockage(Coordinate targetSquare, Direction direction) {
         switch (direction) {
             case NO:
-                if (this.getSquare(targetSquare).getBlockedByMachine()){
+                if (this.getSquare(targetSquare).getBlockedByMachine()) {
                     return true;
                 }
                 return hasHorizontalBarrierBlockage(targetSquare);
             case SO:
-                if (this.getSquare(targetSquare).getBlockedByMachine()){
+                if (this.getSquare(targetSquare).getBlockedByMachine()) {
                     return true;
                 }
                 return hasHorizontalBarrierBlockage(targetSquare.getWithAddedY(-1));
@@ -101,12 +97,12 @@ public class Field {
     public boolean hasVerticalBlockage(Coordinate targetSquare, Direction direction) {
         switch (direction) {
             case EA:
-                if (this.getSquare(targetSquare).getBlockedByMachine()){
+                if (this.getSquare(targetSquare).getBlockedByMachine()) {
                     return true;
                 }
                 return hasVerticalBarrierBlockage(targetSquare);
             case WE:
-                if (this.getSquare(targetSquare).getBlockedByMachine()){
+                if (this.getSquare(targetSquare).getBlockedByMachine()) {
                     return true;
                 }
                 return hasVerticalBarrierBlockage(targetSquare.getWithAddedX(1));
@@ -114,35 +110,45 @@ public class Field {
         return true;
     }
 
-    private boolean hasVerticalBarrierBlockage(Coordinate targetSquare){
-        boolean targetSquareBlocked = false;
-        boolean aboveTargetSquareBlocked = false;
-        for (Barrier barrier: barriers) {
-            for (Coordinate coordinate: barrier.getEncompassingCoordinates()) {
-                if (targetSquare.equals(coordinate)){
+    private boolean hasVerticalBarrierBlockage(Coordinate targetSquare) {
+        boolean hasBarrier = false;
+        for (Barrier barrier : barriers) {
+            boolean targetSquareBlocked = false;
+            boolean aboveTargetSquareBlocked = false;
+            for (Coordinate coordinate : barrier.getEncompassingCoordinates()) {
+                if (targetSquare.equals(coordinate)) {
+                    System.out.println("Target Square Blocked");
                     targetSquareBlocked = true;
                 }
-                if (targetSquare.getWithAddedY(1).equals(coordinate)){
+                if (targetSquare.getWithAddedY(1).equals(coordinate)) {
+                    System.out.println("Next to Target Square Blocked");
                     aboveTargetSquareBlocked = true;
                 }
             }
+            hasBarrier = targetSquareBlocked && aboveTargetSquareBlocked;
         }
-        return targetSquareBlocked && aboveTargetSquareBlocked;
+        System.out.println(hasBarrier);
+        return hasBarrier;
     }
 
-    private boolean hasHorizontalBarrierBlockage(Coordinate targetSquare){
-        boolean targetSquareBlocked = false;
-        boolean rightOfTargetSquareBlocked = false;
-        for (Barrier barrier: barriers) {
-            for (Coordinate coordinate: barrier.getEncompassingCoordinates()) {
-                if (targetSquare.equals(coordinate)){
+    private boolean hasHorizontalBarrierBlockage(Coordinate targetSquare) {
+        boolean hasBarrier = false;
+        for (Barrier barrier : barriers) {
+            boolean targetSquareBlocked = false;
+            boolean rightOfTargetSquareBlocked = false;
+            for (Coordinate coordinate : barrier.getEncompassingCoordinates()) {
+                if (targetSquare.equalsCoordinate(coordinate)) {
+                    System.out.println("Target Square Blocked");
                     targetSquareBlocked = true;
                 }
-                if (targetSquare.getWithAddedX(1).equals(coordinate)){
+                if (targetSquare.getWithAddedX(1).equalsCoordinate(coordinate)) {
+                    System.out.println("Next to Target Square Blocked");
                     rightOfTargetSquareBlocked = true;
                 }
             }
+            hasBarrier = targetSquareBlocked && rightOfTargetSquareBlocked;
         }
-        return targetSquareBlocked && rightOfTargetSquareBlocked;
+        System.out.println(hasBarrier);
+        return hasBarrier;
     }
 }

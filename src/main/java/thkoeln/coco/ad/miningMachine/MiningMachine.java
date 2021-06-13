@@ -3,9 +3,6 @@ package thkoeln.coco.ad.miningMachine;
 import lombok.Getter;
 import lombok.Setter;
 import thkoeln.coco.ad.field.Field;
-import thkoeln.coco.ad.field.Square;
-import thkoeln.coco.ad.instruction.EntryInstruction;
-import thkoeln.coco.ad.instruction.Instruction;
 import thkoeln.coco.ad.instruction.MoveInstruction;
 import thkoeln.coco.ad.instruction.TransportInstruction;
 import thkoeln.coco.ad.primitive.Coordinate;
@@ -63,10 +60,10 @@ public class MiningMachine {
             if (currentPosition.getWithAddedX(-1).getX() >= 0) {
                 if (!currentField.hasVerticalBlockage(currentPosition.getWithAddedX(-1), Direction.WE)) {
                     moveOneStepHorizontally(instruction.getDirection());
-                } else return true;
-            } else return true;
+                }
+            }
         }
-        return false;
+        return true;
     }
 
     private boolean tryToMoveEast(MoveInstruction instruction) {
@@ -74,10 +71,10 @@ public class MiningMachine {
             if (currentPosition.getWithAddedX(1).getX() < currentField.getWidth()) {
                 if (!currentField.hasVerticalBlockage(currentPosition.getWithAddedX(1), Direction.EA)) {
                     moveOneStepHorizontally(instruction.getDirection());
-                } else return true;
-            } else return true;
+                }
+            }
         }
-        return false;
+        return true;
     }
 
     private boolean tryToMoveSouth(MoveInstruction instruction) {
@@ -85,10 +82,10 @@ public class MiningMachine {
             if (currentPosition.getWithAddedY(-1).getY() >= 0) {
                 if (!currentField.hasHorizontalBlockage(currentPosition.getWithAddedY(-1), Direction.SO)) {
                     moveOneStepVertically(instruction.getDirection());
-                } else return true;
-            } else return true;
+                }
+            }
         }
-        return false;
+        return true;
     }
 
     private boolean tryToMoveNorth(MoveInstruction instruction) {
@@ -96,10 +93,10 @@ public class MiningMachine {
             if (currentPosition.getWithAddedY(1).getY() < currentField.getHeight()) {
                 if (!currentField.hasHorizontalBlockage(currentPosition.getWithAddedY(1), Direction.NO)) {
                     moveOneStepVertically(instruction.getDirection());
-                } else return true;
-            } else return true;
+                }
+            }
         }
-        return false;
+        return true;
     }
 
     private void moveOneStepHorizontally(Direction direction) {
@@ -148,6 +145,7 @@ public class MiningMachine {
                 this.currentPosition = new Coordinate(0, 0);
                 this.currentField = entryField;
                 this.currentField.getEntrySquare().setBlocked();
+                System.out.println(this.name + " entered field " + entryField.getId());
                 return true;
             }
         } else return false;

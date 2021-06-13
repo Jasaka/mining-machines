@@ -25,7 +25,8 @@ public class Coordinate {
         return "(" + x + "," + y + ")";
     }
 
-    public boolean equals(Coordinate coordinate){
+
+    public boolean equalsCoordinate(Coordinate coordinate){
         return this.x.equals(coordinate.getX()) && this.y.equals(coordinate.getY());
     }
 

@@ -17,7 +17,8 @@ public class Barrier {
     private Coordinate startCoordinate;
     private Coordinate endCoordinate;
 
-    protected Barrier(){}
+    protected Barrier() {
+    }
 
     public Barrier(Coordinate startCoordinate, Coordinate endCoordinate) {
         this.startCoordinate = startCoordinate;
@@ -49,22 +50,22 @@ public class Barrier {
     }
 
     @Transient
-    public List<Coordinate> getEncompassingCoordinates(){
+    public List<Coordinate> getEncompassingCoordinates() {
         List<Coordinate> encompassingCoordinates = new ArrayList<>();
         int startValue;
-        if (this.startCoordinate.getX().equals(this.endCoordinate.getX())){
-            if (startCoordinate.getY() > endCoordinate.getY()){
+        if (this.startCoordinate.getX().equals(this.endCoordinate.getX())) {
+            if (startCoordinate.getY() > endCoordinate.getY()) {
                 startValue = endCoordinate.getY();
             } else startValue = startCoordinate.getY();
-            for (int i = 0; i <= Math.abs(startCoordinate.getY() - endCoordinate.getY()); i++){
+            for (int i = 0; i <= Math.abs(startCoordinate.getY() - endCoordinate.getY()); i++) {
                 encompassingCoordinates.add(new Coordinate(startCoordinate.getX(), startValue + i));
             }
-        } else{
-            if (startCoordinate.getX() > endCoordinate.getX()){
+        } else {
+            if (startCoordinate.getX() > endCoordinate.getX()) {
                 startValue = endCoordinate.getX();
             } else startValue = startCoordinate.getX();
-            for (int i = 0; i <= Math.abs(startCoordinate.getX() - endCoordinate.getX()); i++){
-                encompassingCoordinates.add(new Coordinate(startCoordinate.getY(), startValue + i));
+            for (int i = 0; i <= Math.abs(startCoordinate.getX() - endCoordinate.getX()); i++) {
+                encompassingCoordinates.add(new Coordinate(startValue + i, startCoordinate.getY()));
             }
         }
         return encompassingCoordinates;
