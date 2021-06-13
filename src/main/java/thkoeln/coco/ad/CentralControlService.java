@@ -1,20 +1,22 @@
 package thkoeln.coco.ad;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import thkoeln.coco.ad.field.Barrier;
+import thkoeln.coco.ad.field.Field;
 import thkoeln.coco.ad.field.FieldRepository;
 import thkoeln.coco.ad.field.SquareRepository;
-import thkoeln.coco.ad.instruction.*;
+import thkoeln.coco.ad.instruction.EntryInstruction;
+import thkoeln.coco.ad.instruction.InstructionFactory;
+import thkoeln.coco.ad.instruction.MoveInstruction;
+import thkoeln.coco.ad.instruction.TransportInstruction;
+import thkoeln.coco.ad.miningMachine.MiningMachine;
 import thkoeln.coco.ad.miningMachine.MiningMachineException;
 import thkoeln.coco.ad.miningMachine.MiningMachineRepository;
 import thkoeln.coco.ad.primitive.Coordinate;
 import thkoeln.coco.ad.transport.Connection;
-import thkoeln.coco.ad.field.Field;
 import thkoeln.coco.ad.transport.ConnectionRepository;
 import thkoeln.coco.ad.transport.TransportTechnology;
-import thkoeln.coco.ad.miningMachine.MiningMachine;
 import thkoeln.coco.ad.transport.TransportTechnologyRepository;
 
 import javax.transaction.Transactional;
@@ -159,7 +161,7 @@ public class CentralControlService {
             }
 
             if (hasConnection && destinationCoordinate != null){
-                Field previousField = machine.executeTransportInstruction(instruction, destinationField, destinationCoordinate);
+                Field previousField = machine.executeTransportInstruction(destinationField, destinationCoordinate);
 
                 if (previousField.getId() != machine.getCurrentField().getId()) {
                     fieldRepository.save(machine.getCurrentField());
@@ -209,12 +211,11 @@ public class CentralControlService {
     }
 
     public MiningMachine getMiningMachineById(UUID id) {
-        MiningMachine machine = machineRepository.findById(id).orElseThrow(() -> new MiningMachineException("Nonexisting MiningMachineID provided: " + id));
-        return machine;
+        return machineRepository.findById(id).orElseThrow(() -> new MiningMachineException("Nonexisting MiningMachineID provided: " + id));
     }
 
     public UUID addMiningMachine(MiningMachine miningMachine) {
-        if (!machineRepository.findById(miningMachine.getId()).isPresent()){
+        if (machineRepository.findById(miningMachine.getId()).isEmpty()){
             machineRepository.save(miningMachine);
         }
         return miningMachine.getId();

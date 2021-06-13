@@ -1,6 +1,6 @@
 |Requirement # | URI | VERB |
 |---|---|---|
-| Get all fields                                                                 | /fields/            | GET |   
+| Get all fields                                                                 | /fields/           | GET |   
 | Create a new field                                                             | /fields/            | PUT |   
 | Get a specific field by ID                                                     | /fields/{field-id}  | GET |   
 | Delete a specific field                                                        | /fields/{field-id}  | DELETE |

@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import thkoeln.coco.ad.field.Field;
 import thkoeln.coco.ad.instruction.MoveInstruction;
-import thkoeln.coco.ad.instruction.TransportInstruction;
 import thkoeln.coco.ad.primitive.Coordinate;
 import thkoeln.coco.ad.primitive.Direction;
 
@@ -36,10 +35,6 @@ public class MiningMachine {
 
     public MiningMachine(String name) {
         this.name = name;
-    }
-
-    public void updateField(Field field){
-        this.currentField = field;
     }
 
     public boolean executeMoveInstruction(MoveInstruction instruction) {
@@ -138,7 +133,7 @@ public class MiningMachine {
         currentField.getSquare(currentPosition.getWithAddedY(-1 * directionFactor)).setUnblocked();
     }
 
-    public Field executeTransportInstruction(TransportInstruction instruction, Field transportField, Coordinate destinationCoordinate) {
+    public Field executeTransportInstruction(Field transportField, Coordinate destinationCoordinate) {
 
         if (!transportField.getSquare(destinationCoordinate).getBlockedByMachine()){
             this.currentField.getSquare(this.currentPosition).setUnblocked();

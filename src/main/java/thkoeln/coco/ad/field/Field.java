@@ -61,10 +61,6 @@ public class Field {
         barriers.add(barrier);
     }
 
-    public void removeBarrier(Barrier barrier) {
-        barriers.remove(barrier);
-    }
-
     public Square getEntrySquare() {
         ensureFieldIsInitialized();
         return field[0][0];

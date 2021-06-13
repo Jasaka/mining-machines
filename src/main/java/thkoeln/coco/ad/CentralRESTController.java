@@ -8,7 +8,6 @@ import thkoeln.coco.ad.field.Field;
 import thkoeln.coco.ad.miningMachine.MiningMachine;
 import thkoeln.coco.ad.miningMachine.MiningMachineException;
 
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -42,13 +41,12 @@ public class CentralRESTController {
             // todo: save the entity using the repo. Create the field beforehand, if it doesn't exist yet
 
             Field field = centralControlService.createOrGetInitialField();
-            MiningMachine newlyCreatedMiningMachine = miningMachine;
 
-            centralControlService.addMiningMachine(newlyCreatedMiningMachine);
+            centralControlService.addMiningMachine(miningMachine);
 
             System.out.println(field.getId());
-            if (centralControlService.executeCommand(newlyCreatedMiningMachine.getId(), "[en," + field.getId() + "]")) {
-                return new ResponseEntity<>(newlyCreatedMiningMachine, HttpStatus.CREATED);
+            if (centralControlService.executeCommand(miningMachine.getId(), "[en," + field.getId() + "]")) {
+                return new ResponseEntity<>(miningMachine, HttpStatus.CREATED);
             } else return new ResponseEntity<>(HttpStatus.CONFLICT);
         } catch (Exception e) {
             System.out.println(e.getMessage());

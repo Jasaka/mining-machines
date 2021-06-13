@@ -8,7 +8,6 @@ import thkoeln.coco.ad.miningMachine.MiningMachineException;
 import thkoeln.coco.ad.primitive.Coordinate;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
