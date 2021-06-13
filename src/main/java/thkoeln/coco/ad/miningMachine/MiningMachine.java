@@ -137,8 +137,20 @@ public class MiningMachine {
         currentField.getSquare(currentPosition.getWithAddedY(-1 * directionFactor)).setUnblocked();
     }
 
-    public boolean executeTransportInstruction(TransportInstruction instruction) {
-        return false;
+    public Field executeTransportInstruction(TransportInstruction instruction, Field transportField, Coordinate destinationCoordinate) {
+
+        if (!transportField.getSquare(destinationCoordinate).getBlockedByMachine()){
+            this.currentField.getSquare(this.currentPosition).setUnblocked();
+            Field previousField = this.currentField;
+
+            this.currentField = transportField;
+            this.currentPosition = destinationCoordinate;
+            this.currentField.getSquare(this.currentPosition).setBlocked();
+
+            return previousField;
+        }
+
+        return this.currentField;
     }
 
     public boolean executeEntryInstruction(Field entryField) {

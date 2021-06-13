@@ -8,6 +8,7 @@ import thkoeln.coco.ad.field.SquareRepository;
 import thkoeln.coco.ad.instruction.*;
 import thkoeln.coco.ad.miningMachine.MiningMachineException;
 import thkoeln.coco.ad.miningMachine.MiningMachineRepository;
+import thkoeln.coco.ad.primitive.Coordinate;
 import thkoeln.coco.ad.transport.Connection;
 import thkoeln.coco.ad.field.Field;
 import thkoeln.coco.ad.transport.ConnectionRepository;
@@ -140,8 +141,30 @@ public class CentralControlService {
         }
         if (InstructionFactory.getInstruction(taskString) instanceof TransportInstruction) {
             TransportInstruction instruction = InstructionFactory.getInstruction(taskString);
-            Field transportField = fieldRepository.findById(instruction.getTargetedFieldId()).orElseThrow(() -> new MiningMachineException("Nonexistent FieldID provided: " + instruction.getTargetedFieldId()));
-            return machine.executeTransportInstruction(instruction);
+            Field destinationField = fieldRepository.findById(instruction.getTargetedFieldId()).orElseThrow(() -> new MiningMachineException("Nonexistent FieldID provided: " + instruction.getTargetedFieldId()));
+
+            List<TransportTechnology> transportTechnologies = transportRepository.findAll();
+
+            boolean hasConnection = false;
+            Coordinate destinationCoordinate = null;
+            for (TransportTechnology technology : transportTechnologies) {
+                hasConnection = technology.hasExistingConnection(machine.getCurrentField(), machine.getCurrentPosition(), destinationField);
+                if (hasConnection) {
+                    destinationCoordinate = technology.getDestinationCoordinate(machine.getCurrentField(), machine.getCurrentPosition(), destinationField);
+                    break;
+                }
+            }
+
+            if (hasConnection && destinationCoordinate != null){
+                Field previousField = machine.executeTransportInstruction(instruction, destinationField, destinationCoordinate);
+
+                if (previousField.getId() != machine.getCurrentField().getId()) {
+                    fieldRepository.save(machine.getCurrentField());
+                    fieldRepository.save(previousField);
+                    return true;
+                }
+            }
+            return false;
         }
         if (InstructionFactory.getInstruction(taskString) instanceof EntryInstruction) {
             EntryInstruction instruction = InstructionFactory.getInstruction(taskString);
@@ -150,7 +173,7 @@ public class CentralControlService {
             boolean successfulEntry = machine.executeEntryInstruction(entryField);
 
             machineRepository.save(machine);
-            if (machine.getCurrentField() != null){
+            if (machine.getCurrentField() != null) {
                 fieldRepository.save(machine.getCurrentField());
             }
 
@@ -159,10 +182,6 @@ public class CentralControlService {
         throw new MiningMachineException("No executable command provided");
     }
 
-    private void saveChangedFields(Field currentField, Field oldField){
-        fieldRepository.save(currentField);
-        fieldRepository.save(oldField);
-    }
 
     /**
      * This method returns the field-ID a mining machine is standing on
