@@ -20,11 +20,6 @@ public class CentralRESTController {
 
     private final CentralControlService centralControlService;
 
-    // todo: add the necessery repositories as members
-
-    /**
-     * todo: Add the repos as parameters. Spring will autowire (= auto-instantiate) them.
-     */
     @Autowired
     public CentralRESTController(CentralControlService centralControlService) {
         this.centralControlService = centralControlService;
@@ -33,13 +28,10 @@ public class CentralRESTController {
 
     /**
      * (2b.2) Create a new mining machine
-     * todo: set the PostMapping
      */
     @PostMapping("/miningMachines")
     public ResponseEntity<MiningMachine> createNewMiningMachine(@RequestBody MiningMachine miningMachine) {
         try {
-            // todo: save the entity using the repo. Create the field beforehand, if it doesn't exist yet
-
             Field field = centralControlService.createOrGetInitialField();
 
             centralControlService.addMiningMachine(miningMachine);
@@ -70,7 +62,6 @@ public class CentralRESTController {
 
     /**
      * Give a specific mining machine a task
-     * todo: set the PutMapping
      */
     @PutMapping("/miningMachines/{id}/tasks/{taskString}")
     public ResponseEntity executeTaskOnMiningMachine(@PathVariable UUID id, @PathVariable String taskString) {
